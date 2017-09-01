@@ -10,5 +10,10 @@ module.exports = {
     loaders: [
       { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ }
      ]
-   }  
+   } ,
+   resolve: {
+      alias: {
+          'd3': 'd3/index.js'
+      }
+  }
 };
