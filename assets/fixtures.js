@@ -572,7 +572,7 @@ var fixtures = {
     {
       "id": 92,
       "name": "TO Portal",
-      "sensorIds": [ ],
+      "sensorsIds": [ ],
       "dependencies": [ 80, 81, 84, 93 ]
     }
   ],
@@ -675,11 +675,87 @@ var fixtures = {
     {
       "id": "4133",
       "name": "airTransat",
-      "sensorType": "httpWebFullPage",
+      "sensorType": "2",
       "url": "https://www.airtransat.com/fr-CA/reserver/reserver-un-vol",
       "timeOut": "60"
     }
   ]
 }
 
-export { fixtures };
+const schema = {
+	"type": "object",
+    "required": ["sensorsTypes", "components", "groups", "sensors"],
+    "properties": {
+    	"sensorsTypes": {"type": "array", "items": {"type": "object"}},
+    	"components": {
+        	"type": "array",
+            "items": {
+             	"type": "object",
+                "required": ["id", "name", "sensorsIds", "dependencies"],
+                "properties": {
+                	"id": {"type": "integer", "minimum": 0},
+                    "name": {"type": "string", "minLength": 1},
+                    "sensorsIds": {
+                     	"type": "array",
+                        "uniqueItems": true,
+                        "items": {"type": "integer", "minimum": 0}
+                    },
+                    "dependencies": {
+                     	"type": "array",
+                        "uniqueItems": true,
+                        "items": {"type": "integer", "minimum": 0}
+                    }
+                }
+            }
+        },
+        "groups": {
+        	"type": "array",
+            "items": {
+             	"type": "object",
+                "required": ["groupId", "name", "componentIds", "groupIds"],
+                 "properties": {
+                  	"groupeId": {"type": "integer", "minimum": 0},
+                    "name": {"type": "string", "minLength": 1},
+                    "componentIds": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "items": {"type": "integer", "minimum": 0}
+                    },
+                    "groupIds": {
+                     	"type": "array",
+                        "uniqueItems": true,
+                        "items": {"type":"integer", "minimum": 0}
+                    }
+                 }
+            }
+        },
+        "sensors": {
+         	"type": "array",
+            "items": {
+             	"type": "object",
+                "required": ["id", "name", "sensorType", "url", "timeOut"],
+                "properties": {
+                 	"id": {
+                      "type": ["string", "integer"],
+                      "pattern": "^[1-9][0-9]*$",
+                      "minimum": 0
+                    },
+                    "name": {"type": "string", "minLength": 1},
+                    "sensorType": {
+                      "type": ["string", "integer"],
+                   	  "pattern": "^[1-9][0-9]*$"
+                    },
+                    "url": { "type": "string"},
+                    "timeOut": {
+                    	"type": ["string", "integer"],
+                      	"pattern": "^[1-9][0-9]*$",
+                      	"minimum": 0
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+export { schema, fixtures };
