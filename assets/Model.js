@@ -1,7 +1,7 @@
 
 import {Enum} from 'enumify';
 
-let Map = require("collections/map");
+let Set = require("collections/set");
 
 class Group {
   constructor(id, name, sensorList){
@@ -12,18 +12,29 @@ class Group {
 }
 
 class Component {
-  constructor(id, name){
+  constructor(id, name, dependenciesIds){
     this.id = id;
     this.name = name;
-    this.dependencies = new Map();
+    this.dependenciesIds = dependenciesIds;
+    this.dependencies = new Set();
   }
 
   getId(){
-    return this.id;
+    return this.id
+  }
+
+  getDependenciesIds(){
+    return this.dependenciesIds
+  }
+
+  addDependencies(componentList){
+    componentList.forEach((c) =>{
+      this.addDependency(c)
+    })
   }
 
   addDependency(component){
-    this.dependencies.add(component.getId(), component)
+    this.dependencies.add(component)
   }
 }
 
