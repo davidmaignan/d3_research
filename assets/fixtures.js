@@ -1,9 +1,6 @@
 var fixtures = {
-  "sensorsTypes": [
-    { "1": "http" },
-    { "2": "httpWebFullPage" },
-    { "3": "json" }
-  ],
+  "sensorsTypes":
+  ["", "http" ,"httpWebFullPage","json"],
   "components": [
     {
       "id": 0,
@@ -686,7 +683,14 @@ const schema = {
 	"type": "object",
     "required": ["sensorsTypes", "components", "groups", "sensors"],
     "properties": {
-    	"sensorsTypes": {"type": "array", "items": {"type": "object"}},
+      "sensorsTypes": {"type": "array"},
+    	// "sensorsTypes": {
+      //     	"type": "object",
+      //     	"minProperties": 1,
+      //     	"patternProperties": {
+      //       "^[1-9][0-9]*$": { "type": "string", "minLength": 1 }
+      //       }
+      //   },
     	"components": {
         	"type": "array",
             "items": {
@@ -756,6 +760,5 @@ const schema = {
         }
     }
 }
-
 
 export { schema, fixtures };

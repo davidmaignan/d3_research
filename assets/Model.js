@@ -1,22 +1,57 @@
 
-import {Enum} from 'enumify';
+import {Enum} from 'enumify'
 
-let Set = require("collections/set");
+let Set = require("collections/set")
 
 class Group {
-  constructor(id, name, sensorList){
-    this.id = id;
-    this.name = name;
-    this.sensorList = sensorList;
+  constructor(id, name, compnenentIds, groupIds){
+    this.id = id
+    this.name = name
+    this.compnenentIds = compnenentIds
+    this.groupIds = groupIds
+    this.components = new Set()
+    this.groups = new Set()
+  }
+
+  getGroupIds(){
+    return this.groupIds
+  }
+
+  getComponentIds(){
+    return this.compnenentIds
+  }
+
+  getId(){
+    return this.id
+  }
+
+  addComponents(componentList){
+    componentList.forEach((c) =>{
+      this.addComponent(c)
+    })
+  }
+
+  addComponent(component){
+    this.components.add(component)
+  }
+
+  addGroups(groupList){
+    groupList.forEach((g) =>{
+      this.addGroup(g)
+    })
+  }
+
+  addGroup(group){
+    this.groups.add(group)
   }
 }
 
 class Component {
   constructor(id, name, dependenciesIds){
-    this.id = id;
-    this.name = name;
-    this.dependenciesIds = dependenciesIds;
-    this.dependencies = new Set();
+    this.id = id
+    this.name = name
+    this.dependenciesIds = dependenciesIds
+    this.dependencies = new Set()
   }
 
   getId(){
@@ -40,16 +75,15 @@ class Component {
 
 class Sensor {
   constructor(id, name, type, url, timeout){
-    this.id = id;
-    this.name = name;
-    this.type = type;
-    this.url = url;
-    this.timeout = timeout;
+    this.id = id
+    this.name = name
+    this.type = type
+    this.url = url
+    this.timeout = timeout
   }
 }
 
 class SensorType extends Enum {}
 
-SensorType.initEnum(['http', 'httpWebFullPage', 'json'])
 
 export {Group, Component, Sensor, SensorType}
