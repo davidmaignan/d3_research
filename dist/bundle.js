@@ -1095,7 +1095,7 @@ var slice = array.slice;
 var Array = __webpack_require__(176);
 var Object = __webpack_require__(50);
 var Function = __webpack_require__(177);
-var RegExp = __webpack_require__(474);
+var RegExp = __webpack_require__(476);
 
 
 
@@ -1983,7 +1983,7 @@ Diagram.prototype = {
 /***/ (function(module, exports, __webpack_require__) {
 
 
-module.exports = (typeof WeakMap !== 'undefined') ? WeakMap : __webpack_require__(473);
+module.exports = (typeof WeakMap !== 'undefined') ? WeakMap : __webpack_require__(475);
 
 
 /***/ }),
@@ -8044,8 +8044,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = x;
-/* harmony export (immutable) */ __webpack_exports__["b"] = y;
+/* harmony export (immutable) */ __webpack_exports__["b"] = x;
+/* harmony export (immutable) */ __webpack_exports__["c"] = y;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_dispatch__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_collection__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_d3_timer__ = __webpack_require__(37);
@@ -8064,7 +8064,7 @@ function y(d) {
 var initialRadius = 10,
     initialAngle = Math.PI * (3 - Math.sqrt(5));
 
-/* unused harmony default export */ var _unused_webpack_default_export = (function(nodes) {
+/* harmony default export */ __webpack_exports__["a"] = (function(nodes) {
   var simulation,
       alpha = 1,
       alphaMin = 0.001,
@@ -12020,11 +12020,11 @@ GenericSet.prototype.entriesArray = function() {
 
 
 var Shim = __webpack_require__(17);
-var Dict = __webpack_require__(475);
+var Dict = __webpack_require__(477);
 var List = __webpack_require__(93);
 var GenericCollection = __webpack_require__(18);
 var GenericSet = __webpack_require__(179);
-var TreeLog = __webpack_require__(476);
+var TreeLog = __webpack_require__(478);
 
 var object_has = Object.prototype.hasOwnProperty;
 
@@ -13135,7 +13135,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_d3_selection_multi_src_selection_attrs__ = __webpack_require__(469);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_d3_selection_multi_src_selection_styles__ = __webpack_require__(470);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__assets_fixtures_js__ = __webpack_require__(471);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__assets_Model_js__ = __webpack_require__(480);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__assets_Model_js__ = __webpack_require__(472);
 
 
 
@@ -13145,84 +13145,59 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 __WEBPACK_IMPORTED_MODULE_0_d3__["selection"].prototype.attrs = __WEBPACK_IMPORTED_MODULE_1__node_modules_d3_selection_multi_src_selection_attrs__["a" /* default */];
 __WEBPACK_IMPORTED_MODULE_0_d3__["selection"].prototype.styles = __WEBPACK_IMPORTED_MODULE_2__node_modules_d3_selection_multi_src_selection_styles__["a" /* default */];
 
-let dimensions = { "width": 500, "height": 500, "border": "1px solid #ddd" };
-let datas = [{ "name": "Luke", "occupation": "jedi", "age": 29 }, { "name": "Leia", "occupation": "princess", "age": 29 }];
-let values = [1, 2, 3, 4];
-let valuesExit = [1, 2, 3];
-__WEBPACK_IMPORTED_MODULE_0_d3__["select"]("body").append("svg").style("height", dimensions.height).style("width", dimensions.width).style("border", dimensions.border);
+var width = 600,
+    height = 400;
 
-let svg = __WEBPACK_IMPORTED_MODULE_0_d3__["select"]("svg");
-let button = document.querySelector("#btn");
+var colorScale = ['orange', 'lightblue', '#B19CD9'];
+var xCenter = [100, 300, 500];
 
-svg.append("g").selectAll("circle").data(values).enter().append("circle").attrs({ r: 0, stroke: "black", cx: (d, i) => d * 100, cy: (d, i) => d * 100 }).styles({ opacity: .2 }).transition().attr("r", 20);
+var numNodes = 100;
+var nodes = __WEBPACK_IMPORTED_MODULE_0_d3__["range"](numNodes).map(function (d, i) {
+  return {
+    radius: Math.random() * 25,
+    category: i % 3
+  };
+});
 
-var exit = () => {
-  console.log("exit");
-  svg.selectAll("circle").data(valuesExit).transition().attr("r", 0);
-};
+var links = [{ source: 0, target: 1 }, { source: 1, target: 6 }, { source: 3, target: 4 }, { source: 4, target: 5 }];
 
-button.addEventListener('click', exit);
+var links2 = [{ source: 0, target: 6 }];
 
-let sensorSet = __webpack_require__(472);
-sensorSet = new Set();
+var simulation = __WEBPACK_IMPORTED_MODULE_0_d3__["forceSimulation"](nodes).force('charge', __WEBPACK_IMPORTED_MODULE_0_d3__["forceManyBody"]().strength(5)).force('x', __WEBPACK_IMPORTED_MODULE_0_d3__["forceX"]().x(function (d) {
+  return xCenter[d.category];
+})).force('collision', __WEBPACK_IMPORTED_MODULE_0_d3__["forceCollide"]().radius(function (d) {
+  return d.radius;
+})).force('link', __WEBPACK_IMPORTED_MODULE_0_d3__["forceLink"]().links(links)).on('tick', ticked);
 
-for (let i in __WEBPACK_IMPORTED_MODULE_3__assets_fixtures_js__["a" /* fixtures */].sensors) {
-  let s = __WEBPACK_IMPORTED_MODULE_3__assets_fixtures_js__["a" /* fixtures */].sensors[i];
-  sensorSet.add(new __WEBPACK_IMPORTED_MODULE_4__assets_Model_js__["c" /* Sensor */](s.id, s.name, s.sensorType, s.url, s.timeout));
+function ticked() {
+  var u = __WEBPACK_IMPORTED_MODULE_0_d3__["select"]('svg g').selectAll('circle').data(nodes);
+
+  u.enter().append('circle').attr('r', function (d) {
+    return d.radius;
+  }).style('fill', function (d) {
+    return colorScale[d.category];
+  }).merge(u).attr('cx', function (d) {
+    return d.x;
+  }).attr('cy', function (d) {
+    return d.y;
+  });
+
+  u.exit().remove();
+
+  var v = __WEBPACK_IMPORTED_MODULE_0_d3__["select"]('svg g').selectAll('line').data(links);
+
+  v.enter().append('line').merge(v).attr('x1', function (d) {
+    return d.source.x;
+  }).attr('y1', function (d) {
+    return d.source.y;
+  }).attr('x2', function (d) {
+    return d.target.x;
+  }).attr('y2', function (d) {
+    return d.target.y;
+  });
+
+  v.exit().remove();
 }
-
-let componentMap = __webpack_require__(482);
-componentMap = new Map();
-
-// for(let i in fixtures.components){
-//   let c = fixtures.components[i]
-//   // console.log(c)
-//   componentSet.add(new Component(c.id, c.name))
-//   console.log(c.dependencies)
-//   c.dependencies.forEach((e) => {
-//     // console.log(e)
-//     // let cmp = componentSet.one({"id": e})
-//     // console.log(cmp)
-//   })
-// }
-
-var createComponentRec = obj => {
-
-  let tmp = componentMap.one({ "id": obj.id });
-
-  console.log(tmp);
-};
-
-var createComponent = list => {
-  for (let i in list) {
-    let c = list[i];
-    componentMap.set(i, new __WEBPACK_IMPORTED_MODULE_4__assets_Model_js__["a" /* Component */](c.id, c.name));
-  }
-
-  console.log(componentMap);
-
-  for (let i in list) {
-    let c = list[i];
-    let component = componentMap.get(c.id.toString());
-    c.dependencies.forEach(j => {
-      let elt = componentMap.get(j.toString());
-      component.addDependency(elt);
-    });
-    // componentSet.add(new Component(c.id, c.name))
-  }
-};
-
-createComponent(__WEBPACK_IMPORTED_MODULE_3__assets_fixtures_js__["a" /* fixtures */].components);
-
-// console.log(componentSet)
-
-
-let groupSet = __webpack_require__(472);
-for (let g in __WEBPACK_IMPORTED_MODULE_3__assets_fixtures_js__["a" /* fixtures */].groups) {
-  let group = new __WEBPACK_IMPORTED_MODULE_4__assets_Model_js__["b" /* Group */](g.id, g.name);
-}
-
-// var datas = fixtures
 
 /***/ }),
 /* 185 */
@@ -13232,7 +13207,7 @@ for (let g in __WEBPACK_IMPORTED_MODULE_3__assets_fixtures_js__["a" /* fixtures 
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__build_package__ = __webpack_require__(186);
 /* unused harmony reexport version */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_array__ = __webpack_require__(3);
-/* unused harmony namespace reexport */
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "range", function() { return __WEBPACK_IMPORTED_MODULE_1_d3_array__["f"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_d3_axis__ = __webpack_require__(203);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_d3_brush__ = __webpack_require__(207);
@@ -13252,7 +13227,11 @@ for (let g in __WEBPACK_IMPORTED_MODULE_3__assets_fixtures_js__["a" /* fixtures 
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_d3_ease__ = __webpack_require__(125);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_d3_force__ = __webpack_require__(306);
-/* unused harmony namespace reexport */
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "forceCollide", function() { return __WEBPACK_IMPORTED_MODULE_11_d3_force__["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "forceLink", function() { return __WEBPACK_IMPORTED_MODULE_11_d3_force__["b"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "forceManyBody", function() { return __WEBPACK_IMPORTED_MODULE_11_d3_force__["c"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "forceSimulation", function() { return __WEBPACK_IMPORTED_MODULE_11_d3_force__["d"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "forceX", function() { return __WEBPACK_IMPORTED_MODULE_11_d3_force__["e"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_d3_format__ = __webpack_require__(73);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_d3_geo__ = __webpack_require__(335);
@@ -18005,15 +17984,15 @@ var tsvFormatRows = tsv.formatRows;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_center__ = __webpack_require__(307);
 /* unused harmony reexport forceCenter */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_collide__ = __webpack_require__(308);
-/* unused harmony reexport forceCollide */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__src_collide__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_link__ = __webpack_require__(322);
-/* unused harmony reexport forceLink */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__src_link__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_manyBody__ = __webpack_require__(323);
-/* unused harmony reexport forceManyBody */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_3__src_manyBody__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__src_simulation__ = __webpack_require__(128);
-/* unused harmony reexport forceSimulation */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_4__src_simulation__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__src_x__ = __webpack_require__(324);
-/* unused harmony reexport forceX */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_5__src_x__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__src_y__ = __webpack_require__(325);
 /* unused harmony reexport forceY */
 
@@ -18088,7 +18067,7 @@ function y(d) {
   return d.y + d.vy;
 }
 
-/* unused harmony default export */ var _unused_webpack_default_export = (function(radius) {
+/* harmony default export */ __webpack_exports__["a"] = (function(radius) {
   var nodes,
       radii,
       strength = 1,
@@ -18730,7 +18709,7 @@ function find(nodeById, nodeId) {
   return node;
 }
 
-/* unused harmony default export */ var _unused_webpack_default_export = (function(links) {
+/* harmony default export */ __webpack_exports__["a"] = (function(links) {
   var id = index,
       strength = defaultStrength,
       strengths,
@@ -18848,7 +18827,7 @@ function find(nodeById, nodeId) {
 
 
 
-/* unused harmony default export */ var _unused_webpack_default_export = (function() {
+/* harmony default export */ __webpack_exports__["a"] = (function() {
   var nodes,
       node,
       alpha,
@@ -18859,7 +18838,7 @@ function find(nodeById, nodeId) {
       theta2 = 0.81;
 
   function force(_) {
-    var i, n = nodes.length, tree = Object(__WEBPACK_IMPORTED_MODULE_2_d3_quadtree__["a" /* quadtree */])(nodes, __WEBPACK_IMPORTED_MODULE_3__simulation__["a" /* x */], __WEBPACK_IMPORTED_MODULE_3__simulation__["b" /* y */]).visitAfter(accumulate);
+    var i, n = nodes.length, tree = Object(__WEBPACK_IMPORTED_MODULE_2_d3_quadtree__["a" /* quadtree */])(nodes, __WEBPACK_IMPORTED_MODULE_3__simulation__["b" /* x */], __WEBPACK_IMPORTED_MODULE_3__simulation__["c" /* y */]).visitAfter(accumulate);
     for (alpha = _, i = 0; i < n; ++i) node = nodes[i], tree.visit(apply);
   }
 
@@ -18967,7 +18946,7 @@ function find(nodeById, nodeId) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__constant__ = __webpack_require__(25);
 
 
-/* unused harmony default export */ var _unused_webpack_default_export = (function(x) {
+/* harmony default export */ __webpack_exports__["a"] = (function(x) {
   var strength = Object(__WEBPACK_IMPORTED_MODULE_0__constant__["a" /* default */])(0.1),
       nodes,
       strengths,
@@ -26687,7 +26666,8 @@ function stylesObject(selection, map, priority) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return fixtures; });
+/* unused harmony export schema */
+/* unused harmony export fixtures */
 var fixtures = {
   "sensorsTypes": [{ "1": "http" }, { "2": "httpWebFullPage" }, { "3": "json" }],
   "components": [{
@@ -27163,7 +27143,7 @@ var fixtures = {
   }, {
     "id": 92,
     "name": "TO Portal",
-    "sensorIds": [],
+    "sensorsIds": [],
     "dependencies": [80, 81, 84, 93]
   }],
 
@@ -27248,16 +27228,373 @@ var fixtures = {
   }, {
     "id": "4133",
     "name": "airTransat",
-    "sensorType": "httpWebFullPage",
+    "sensorType": "2",
     "url": "https://www.airtransat.com/fr-CA/reserver/reserver-un-vol",
     "timeOut": "60"
   }]
+};
+
+const schema = {
+  "type": "object",
+  "required": ["sensorsTypes", "components", "groups", "sensors"],
+  "properties": {
+    "sensorsTypes": { "type": "array", "items": { "type": "object" } },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "sensorsIds", "dependencies"],
+        "properties": {
+          "id": { "type": "integer", "minimum": 0 },
+          "name": { "type": "string", "minLength": 1 },
+          "sensorsIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "integer", "minimum": 0 }
+          },
+          "dependencies": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["groupId", "name", "componentIds", "groupIds"],
+        "properties": {
+          "groupeId": { "type": "integer", "minimum": 0 },
+          "name": { "type": "string", "minLength": 1 },
+          "componentIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "integer", "minimum": 0 }
+          },
+          "groupIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "sensors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "sensorType", "url", "timeOut"],
+        "properties": {
+          "id": {
+            "type": ["string", "integer"],
+            "pattern": "^[1-9][0-9]*$",
+            "minimum": 0
+          },
+          "name": { "type": "string", "minLength": 1 },
+          "sensorType": {
+            "type": ["string", "integer"],
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "url": { "type": "string" },
+          "timeOut": {
+            "type": ["string", "integer"],
+            "pattern": "^[1-9][0-9]*$",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
 };
 
 
 
 /***/ }),
 /* 472 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export Group */
+/* unused harmony export Component */
+/* unused harmony export Sensor */
+/* unused harmony export SensorType */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_enumify__ = __webpack_require__(473);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_enumify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_enumify__);
+
+
+
+let Set = __webpack_require__(474);
+
+class Group {
+  constructor(id, name, sensorList) {
+    this.id = id;
+    this.name = name;
+    this.sensorList = sensorList;
+  }
+}
+
+class Component {
+  constructor(id, name, dependenciesIds) {
+    this.id = id;
+    this.name = name;
+    this.dependenciesIds = dependenciesIds;
+    this.dependencies = new Set();
+  }
+
+  getId() {
+    return this.id;
+  }
+
+  getDependenciesIds() {
+    return this.dependenciesIds;
+  }
+
+  addDependencies(componentList) {
+    componentList.forEach(c => {
+      this.addDependency(c);
+    });
+  }
+
+  addDependency(component) {
+    this.dependencies.add(component);
+  }
+}
+
+class Sensor {
+  constructor(id, name, type, url, timeout) {
+    this.id = id;
+    this.name = name;
+    this.type = type;
+    this.url = url;
+    this.timeout = timeout;
+  }
+}
+
+class SensorType extends __WEBPACK_IMPORTED_MODULE_0_enumify__["Enum"] {}
+
+SensorType.initEnum(['http', 'httpWebFullPage', 'json']);
+
+
+
+/***/ }),
+/* 473 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.copyProperties = copyProperties;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var INITIALIZED = Symbol();
+
+/**
+ * This is an abstract class that is not intended to be
+ * used directly. Extend it to turn your class into an enum
+ * (initialization is performed via `MyClass.initEnum()`).
+ */
+
+var Enum = exports.Enum = function () {
+    /**
+     * `initEnum()` closes the class. Then calling this constructor
+     * throws an exception.
+     * 
+     * If your subclass has a constructor then you can control
+     * what properties are added to `this` via the argument you
+     * pass to `super()`. No arguments are fine, too.
+     */
+
+    function Enum() {
+        var instanceProperties = arguments.length <= 0 || arguments[0] === undefined ? undefined : arguments[0];
+
+        _classCallCheck(this, Enum);
+
+        // new.target would be better than this.constructor,
+        // but isn’t supported by Babel
+        if ({}.hasOwnProperty.call(this.constructor, INITIALIZED)) {
+            throw new Error('Enum classes can’t be instantiated');
+        }
+        if ((typeof instanceProperties === 'undefined' ? 'undefined' : _typeof(instanceProperties)) === 'object' && instanceProperties !== null) {
+            copyProperties(this, instanceProperties);
+        }
+    }
+    /**
+     * Set up the enum, close the class.
+     * 
+     * @param arg Either an object whose properties provide the names
+     * and values (which must be mutable objects) of the enum constants.
+     * Or an Array whose elements are used as the names of the enum constants
+     * The values are create by instantiating the current class.
+     */
+
+    _createClass(Enum, [{
+        key: 'toString',
+
+        /**
+         * Default `toString()` method for enum constant.
+         */
+        value: function toString() {
+            return this.constructor.name + '.' + this.name;
+        }
+    }], [{
+        key: 'initEnum',
+        value: function initEnum(arg) {
+            Object.defineProperty(this, 'enumValues', {
+                value: [],
+                configurable: false,
+                writable: false,
+                enumerable: true
+            });
+            if (Array.isArray(arg)) {
+                this._enumValuesFromArray(arg);
+            } else {
+                this._enumValuesFromObject(arg);
+            }
+            Object.freeze(this.enumValues);
+            this[INITIALIZED] = true;
+            return this;
+        }
+    }, {
+        key: '_enumValuesFromArray',
+        value: function _enumValuesFromArray(arr) {
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = arr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var key = _step.value;
+
+                    this._pushEnumValue(new this(), key);
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+        }
+    }, {
+        key: '_enumValuesFromObject',
+        value: function _enumValuesFromObject(obj) {
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = Object.keys(obj)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var key = _step2.value;
+
+                    var value = new this(obj[key]);
+                    this._pushEnumValue(value, key);
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+        }
+    }, {
+        key: '_pushEnumValue',
+        value: function _pushEnumValue(enumValue, name) {
+            enumValue.name = name;
+            enumValue.ordinal = this.enumValues.length;
+            Object.defineProperty(this, name, {
+                value: enumValue,
+                configurable: false,
+                writable: false,
+                enumerable: true
+            });
+            this.enumValues.push(enumValue);
+        }
+
+        /**
+         * Given the name of an enum constant, return its value.
+         */
+
+    }, {
+        key: 'enumValueOf',
+        value: function enumValueOf(name) {
+            return this.enumValues.find(function (x) {
+                return x.name === name;
+            });
+        }
+
+        /**
+         * Make enum classes iterable
+         */
+
+    }, {
+        key: Symbol.iterator,
+        value: function value() {
+            return this.enumValues[Symbol.iterator]();
+        }
+    }]);
+
+    return Enum;
+}();
+
+function copyProperties(target, source) {
+    // Ideally, we’d use Reflect.ownKeys() here,
+    // but I don’t want to depend on a polyfill
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+        for (var _iterator3 = Object.getOwnPropertyNames(source)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var key = _step3.value;
+
+            var desc = Object.getOwnPropertyDescriptor(source, key);
+            Object.defineProperty(target, key, desc);
+        }
+    } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
+            }
+        } finally {
+            if (_didIteratorError3) {
+                throw _iteratorError3;
+            }
+        }
+    }
+
+    return target;
+}
+
+/***/ }),
+/* 474 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -27266,7 +27603,7 @@ var fixtures = {
 var Set = __webpack_require__(175);
 var PropertyChanges = __webpack_require__(94);
 var RangeChanges = __webpack_require__(183);
-var MapChanges = __webpack_require__(477);
+var MapChanges = __webpack_require__(479);
 var GlobalSet;
 
 
@@ -27414,8 +27751,8 @@ function setupCollectionSet() {
     CollectionsSet.prototype = new _CollectionsSet();
     CollectionsSet.prototype.constructor = CollectionsSet;
 
-    var List = __webpack_require__(478);
-    var FastSet = __webpack_require__(479);
+    var List = __webpack_require__(480);
+    var FastSet = __webpack_require__(481);
     CollectionsSet.prototype.Order = List;
     CollectionsSet.prototype.Store = FastSet;
 
@@ -27490,7 +27827,7 @@ function setupCollectionSet() {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(49)))
 
 /***/ }),
-/* 473 */
+/* 475 */
 /***/ (function(module, exports) {
 
 // Copyright (C) 2011 Google Inc.
@@ -28181,7 +28518,7 @@ function setupCollectionSet() {
 
 
 /***/ }),
-/* 474 */
+/* 476 */
 /***/ (function(module, exports) {
 
 
@@ -28201,7 +28538,7 @@ if (!RegExp.escape) {
 
 
 /***/ }),
-/* 475 */
+/* 477 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28414,7 +28751,7 @@ Dict.prototype.toJSON = function () {
 
 
 /***/ }),
-/* 476 */
+/* 478 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28461,7 +28798,7 @@ TreeLog.unicodeSharp = {
 
 
 /***/ }),
-/* 477 */
+/* 479 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28729,7 +29066,7 @@ MapChanges.prototype.dispatchBeforeMapChange = function (key, value) {
 
 
 /***/ }),
-/* 478 */
+/* 480 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29006,7 +29343,7 @@ List.prototype.reverse = function () {
 
 
 /***/ }),
-/* 479 */
+/* 481 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29020,301 +29357,6 @@ module.exports = FastSet;
 
 Object.addEach(FastSet.prototype, PropertyChanges.prototype);
 
-
-/***/ }),
-/* 480 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Group; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Component; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return Sensor; });
-/* unused harmony export SensorType */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_enumify__ = __webpack_require__(481);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_enumify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_enumify__);
-
-
-
-let Map = __webpack_require__(482);
-
-class Group {
-  constructor(id, name, sensorList) {
-    this.id = id;
-    this.name = name;
-    this.sensorList = sensorList;
-  }
-}
-
-class Component {
-  constructor(id, name) {
-    this.id = id;
-    this.name = name;
-    this.dependencies = new Map();
-  }
-
-  getId() {
-    return this.id;
-  }
-
-  addDependency(component) {
-    this.dependencies.add(component.getId(), component);
-  }
-}
-
-class Sensor {
-  constructor(id, name, type, url, timeout) {
-    this.id = id;
-    this.name = name;
-    this.type = type;
-    this.url = url;
-    this.timeout = timeout;
-  }
-}
-
-class SensorType extends __WEBPACK_IMPORTED_MODULE_0_enumify__["Enum"] {}
-
-SensorType.initEnum(['http', 'httpWebFullPage', 'json']);
-
-
-
-/***/ }),
-/* 481 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.copyProperties = copyProperties;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var INITIALIZED = Symbol();
-
-/**
- * This is an abstract class that is not intended to be
- * used directly. Extend it to turn your class into an enum
- * (initialization is performed via `MyClass.initEnum()`).
- */
-
-var Enum = exports.Enum = function () {
-    /**
-     * `initEnum()` closes the class. Then calling this constructor
-     * throws an exception.
-     * 
-     * If your subclass has a constructor then you can control
-     * what properties are added to `this` via the argument you
-     * pass to `super()`. No arguments are fine, too.
-     */
-
-    function Enum() {
-        var instanceProperties = arguments.length <= 0 || arguments[0] === undefined ? undefined : arguments[0];
-
-        _classCallCheck(this, Enum);
-
-        // new.target would be better than this.constructor,
-        // but isn’t supported by Babel
-        if ({}.hasOwnProperty.call(this.constructor, INITIALIZED)) {
-            throw new Error('Enum classes can’t be instantiated');
-        }
-        if ((typeof instanceProperties === 'undefined' ? 'undefined' : _typeof(instanceProperties)) === 'object' && instanceProperties !== null) {
-            copyProperties(this, instanceProperties);
-        }
-    }
-    /**
-     * Set up the enum, close the class.
-     * 
-     * @param arg Either an object whose properties provide the names
-     * and values (which must be mutable objects) of the enum constants.
-     * Or an Array whose elements are used as the names of the enum constants
-     * The values are create by instantiating the current class.
-     */
-
-    _createClass(Enum, [{
-        key: 'toString',
-
-        /**
-         * Default `toString()` method for enum constant.
-         */
-        value: function toString() {
-            return this.constructor.name + '.' + this.name;
-        }
-    }], [{
-        key: 'initEnum',
-        value: function initEnum(arg) {
-            Object.defineProperty(this, 'enumValues', {
-                value: [],
-                configurable: false,
-                writable: false,
-                enumerable: true
-            });
-            if (Array.isArray(arg)) {
-                this._enumValuesFromArray(arg);
-            } else {
-                this._enumValuesFromObject(arg);
-            }
-            Object.freeze(this.enumValues);
-            this[INITIALIZED] = true;
-            return this;
-        }
-    }, {
-        key: '_enumValuesFromArray',
-        value: function _enumValuesFromArray(arr) {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = arr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var key = _step.value;
-
-                    this._pushEnumValue(new this(), key);
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-        }
-    }, {
-        key: '_enumValuesFromObject',
-        value: function _enumValuesFromObject(obj) {
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
-
-            try {
-                for (var _iterator2 = Object.keys(obj)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var key = _step2.value;
-
-                    var value = new this(obj[key]);
-                    this._pushEnumValue(value, key);
-                }
-            } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
-                    }
-                } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
-                    }
-                }
-            }
-        }
-    }, {
-        key: '_pushEnumValue',
-        value: function _pushEnumValue(enumValue, name) {
-            enumValue.name = name;
-            enumValue.ordinal = this.enumValues.length;
-            Object.defineProperty(this, name, {
-                value: enumValue,
-                configurable: false,
-                writable: false,
-                enumerable: true
-            });
-            this.enumValues.push(enumValue);
-        }
-
-        /**
-         * Given the name of an enum constant, return its value.
-         */
-
-    }, {
-        key: 'enumValueOf',
-        value: function enumValueOf(name) {
-            return this.enumValues.find(function (x) {
-                return x.name === name;
-            });
-        }
-
-        /**
-         * Make enum classes iterable
-         */
-
-    }, {
-        key: Symbol.iterator,
-        value: function value() {
-            return this.enumValues[Symbol.iterator]();
-        }
-    }]);
-
-    return Enum;
-}();
-
-function copyProperties(target, source) {
-    // Ideally, we’d use Reflect.ownKeys() here,
-    // but I don’t want to depend on a polyfill
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
-
-    try {
-        for (var _iterator3 = Object.getOwnPropertyNames(source)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var key = _step3.value;
-
-            var desc = Object.getOwnPropertyDescriptor(source, key);
-            Object.defineProperty(target, key, desc);
-        }
-    } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
-            }
-        } finally {
-            if (_didIteratorError3) {
-                throw _iteratorError3;
-            }
-        }
-    }
-
-    return target;
-}
-
-/***/ }),
-/* 482 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var Map = __webpack_require__(51);
-var PropertyChanges = __webpack_require__(94);
-var MapChanges = __webpack_require__(477);
-
-module.exports = Map;
-
-if((global.Map === void 0) || (typeof global.Set.prototype.values !== "function")) {
-    Object.addEach(Map.prototype, PropertyChanges.prototype);
-    Object.addEach(Map.prototype, MapChanges.prototype);
-}
-else {
-    Object.defineEach(Map.prototype, PropertyChanges.prototype, false, /*configurable*/true, /*enumerable*/ false, /*writable*/true);
-    Object.defineEach(Map.prototype, MapChanges.prototype, false, /*configurable*/true, /*enumerable*/ false, /*writable*/true);
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(49)))
 
 /***/ })
 /******/ ]);
