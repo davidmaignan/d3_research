@@ -11,6 +11,8 @@ class Group {
     this.groupIds = groupIds
     this.components = new Set()
     this.groups = new Set()
+    this.topLevel = true
+    this.size = 0;
   }
 
   getGroupIds(){
@@ -23,6 +25,18 @@ class Group {
 
   getId(){
     return this.id
+  }
+
+  getName(){
+    return this.name
+  }
+
+  setTopLevel(value){
+    this.topLevel = value
+  }
+
+  isTopLevel(){
+    return this.topLevel;
   }
 
   addComponents(componentList){
@@ -52,10 +66,15 @@ class Component {
     this.name = name
     this.dependenciesIds = dependenciesIds
     this.dependencies = new Set()
+    this.size = 0
   }
 
   getId(){
     return this.id
+  }
+
+  getSize(){
+    return this.size
   }
 
   getDependenciesIds(){

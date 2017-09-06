@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './index.js',
@@ -15,5 +16,11 @@ module.exports = {
       alias: {
           'd3': 'd3/index.js'
       }
-  }
+  },
+  plugins: [
+        new webpack.ProvidePlugin({
+           $: "jquery",
+           jQuery: "jquery"
+        })
+    ]
 };

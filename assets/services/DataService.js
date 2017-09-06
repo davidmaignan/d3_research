@@ -59,6 +59,4 @@ groupSet.forEach((g) => {
   g.addGroups(groupList)
 })
 
-let groupTopLevel = groupSet.filter(g => g.isTopLevel()).toArray()
-
-export {}
+export { groupSet }
