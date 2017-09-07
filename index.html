@@ -6,12 +6,22 @@
     line {
       stroke: #ccc;
       }
+      circle {
+        fill: #ddd;
+      }
+      svg {
+        border: 1px solid #ddd
+      }
     </style>
   </head>
   <body>
+    <button id="btn">click</button>
     <div id="content">
       <svg width="700" height="400">
         <g transform="translate(50, 200)"></g>
+        <g class="links"></g>
+        <g class="nodes"></g>
+
       </svg>
     </div>
     <script src="./dist/bundle.js"></script>

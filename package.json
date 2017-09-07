@@ -7,23 +7,25 @@
   },
   "dependencies": {
     "ajv": "^5.2.2",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "body-parser": "~1.17.1",
+    "bootstrap": "^3.3.7",
     "collections": "^5.0.7",
     "cookie-parser": "~1.4.3",
     "d3": "^4.10.0",
+    "d3-force": "^1.0.6",
     "d3-selection-multi": "^1.0.1",
     "debug": "~2.6.3",
     "enumify": "^1.0.4",
     "express": "~4.15.2",
+    "jquery": "^3.2.1",
     "morgan": "~1.8.1",
     "pug": "~2.0.0-beta11",
-    "serve-favicon": "~2.4.2"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
+    "serve-favicon": "~2.4.2",
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1"
-  }
+  },
+  "devDependencies": {}
 }
