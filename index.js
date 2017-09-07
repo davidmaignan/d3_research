@@ -38,12 +38,6 @@ function flattenComponentListRec(list, cmp){
   cmp.dependencies.forEach((cmp) => flattenComponentListRec(list, cmp))
 }
 
-
-
-
-
-
-
 function test(){
 
   var width = 600, height = 400;
@@ -426,7 +420,6 @@ function test4() {
 }
 
 // test4()
-
 // test()
 // test2()
 // test3()

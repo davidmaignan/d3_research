@@ -49,14 +49,14 @@ for (let i in fixtures.groups) {
 
 
 groupSet.forEach((g) => {
-  let componentIds = g.getDependenciesIds()
+  let componentIds = g.getComponentIds()
   let components = componentSet.filter(cmp => componentIds.includes(cmp.getId()))
   g.addComponents(components)
 
   let groupIds = g.getGroupIds()
   let groupList = groupSet.filter(g => groupIds.includes(g.getId()))
 
-  groupList.forEach(grp => g.addGroupParent(g))
+  // groupList.forEach(grp => g.addGroupParent(g))
 
   groupList.forEach(g => g.setTopLevel(false)) //@todo refactor
   g.addGroups(groupList)
