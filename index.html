@@ -4,22 +4,24 @@
     <script src="https://unpkg.com/lodash@4.16.6"></script>
     <style>
       line {
-      stroke: #efefef;
+      stroke: #fff;
       }
       circle {
-        fill: #efefef;
+        fill: #fff;
       }
 
-      .node {}
+      .node {
+        color: #fff
+      }
 
-        .link { stroke: #999; stroke-opacity: .6; stroke-width: 1px; }
+        .link { stroke: #ddd; stroke-opacity: .1; stroke-width: 1px; }
       svg {
         border: 1px solid #ddd
       }
     </style>
   </head>
   <body>
-    <button id="btn">click</button>
+    <button id="add">Add</button>  <button id="remove">Remove</button>
     <svg width="960" height="600"></svg>
     <script src="./dist/bundle.js"></script>
   </body>

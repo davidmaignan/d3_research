@@ -54,8 +54,6 @@ for(let i = 0; i < groupTopLevel.length - 1; i++){
   }
 }
 
-// console.log(groupTopLevel, linkGroupTopLevel)
-
 class Test{
   constructor(id, label, name){
     this.id = id
@@ -64,25 +62,29 @@ class Test{
   }
 }
 
-let root = new Test(0, "root", "root")
+let node0 = new Test(0, "root", "root")
 let node1 = new Test(1, "node1", "node1")
 let node2 = new Test(2, "node2", "node2")
-let node3 = new Test(11, "node3", "node3")
+let node3 = new Test(3, "node3", "node3")
+let node4 = new Test(4, "node4", "node4")
 
-
+let nodeList = []
+let linkList = []
 
 var json = {
   "nodes": [
-    root, node1, node2, node3
+    node0, node1, node2, node3
   ],
   "links": [
-    {source: 0, target: 1},
-    {source: 0, target: 2},
-    {source: 0, target: 3}
+    {source: node0, target: node1},
+    {source: node0, target: node2},
+    {source: node0, target: node3}
   ]
 }
-
-
+var linkBatch0 = [
+  {source: node1, target: node2},
+  {source: node1, target: node3},
+]
 var json2 = {
   "nodes": [
     {
@@ -177,7 +179,6 @@ var json2 = {
 }
 
 var colors = d3.scaleOrdinal(d3.schemeCategory10);
-
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height"),
@@ -185,7 +186,6 @@ var svg = d3.select("svg"),
     link,
     edgepaths,
     edgelabels;
-
 svg.append('defs').append('marker')
     .attrs({'id':'arrowhead',
         'viewBox':'-0 -5 10 10',
@@ -197,23 +197,36 @@ svg.append('defs').append('marker')
         'xoverflow':'visible'})
     .append('svg:path')
     .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-    .attr('fill', 'red')
+    .attr('fill', '#ddd')
     .style('stroke','none');
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().distance((d) => {
-      if(d.source.id === 0 && d.target.id === 1) {
-        return 200
-      }
+      // if(d.source.id === 0 && d.target.id === 1) {
+      //   return 200
+      // }
       return 100
     }).strength(1))
     .force("charge", d3.forceManyBody().strength(-100))
     .force("center", d3.forceCenter(width / 2, height / 2))
     .force("collision", d3.forceCollide().radius((f)=> {
-      // console.log(f)
-
       return 50
     }))
+
+let index = 0
+// var ajout = d3.interval(() => {
+//   if(index < 4){
+//     nodeList.push(eval("node"+index))
+//     if(index > 0){
+//       linkList.push({source: node0, target: eval("node"+index)})
+//     }
+//     console.log(nodeList, linkList)
+//   } else {
+//     clearInterval(ajout)
+//   }
+//
+//   index++
+// }, 5000);
 
 update(json.links, json.nodes);
 
@@ -223,13 +236,10 @@ function update(links, nodes) {
         .enter()
         .append("line")
         .attr("class", "link")
-        .attr('marker-mid','url(#arrowhead)')
-
-
+        .attr('marker-end','url(#arrowhead)')
 
     link.append("title")
         .text(function (d) {return "to define";});
-
     // edgepaths = svg.selectAll(".edgepath")
     //     .data(links)
     //     .enter()
@@ -260,41 +270,41 @@ function update(links, nodes) {
     //     .text(function (d) {return d.type});
 
     node = svg.selectAll(".node")
-        .data(nodes, function(d){
-          return d.test;
-        })
+    node = node.data(nodes, function(d) { return d.id})
+
+    let nodeEnter = node
         .enter()
         .append("g")
         .attr("class", "node")
-        .call(d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                //.on("end", dragended)
-        );
+        .call(d3.drag().on("start", dragstarted).on("drag", dragged))
 
+    node.exit().remove()
+    nodeEnter.merge(node)
 
-
-    node.on("mouseover", (d) => {
+    nodeEnter.on("mouseover", (d) => {
       // console.log(d)
     })
 
-    node.append("circle")
+    nodeEnter.append("circle")
         .attr("r", (data, i) => {
-            return 1 //25 + 10 * (i % 3)
+            return 5 //25 + 10 * (i % 3)
         })
         .style("fill", function (d, i) {return "#ededed";})
 
-    node.append("title")
+    nodeEnter.append("title")
         .text(function (d) {return d.id;});
 
-    node.append("text")
+    nodeEnter.append("text")
         .attrs({
           "dx": -10,
-          "dy": -3,
-          "font-family": "sans",
-          "font-size": 15
+          "dy": -20,
+          "font-family": "arial",
+          "font-size": 10,
+          "color": "#ddd"
         })
-        .text(function (d) {return d.name ;});
+        .text(function (d) {return "." ;});
+
+    node = svg.selectAll(".node")
 
     simulation
         .nodes(nodes)
@@ -302,6 +312,8 @@ function update(links, nodes) {
 
     simulation.force("link")
         .links(links);
+
+    simulation.alpha(1).restart();
 }
 
 function ticked() {
@@ -329,14 +341,27 @@ function ticked() {
     //     }
     // });
 }
-
 function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart()
     d.fx = d.x;
     d.fy = d.y;
 }
-
 function dragged(d) {
     d.fx = d3.event.x;
     d.fy = d3.event.y;
 }
+
+document.querySelector("#add").addEventListener("click", (event) => {
+  json.nodes[4] = node4
+
+  console.log(json.nodes)
+
+  update(json.links, json.nodes);
+})
+document.querySelector("#remove").addEventListener("click", (event) => {
+  json.nodes.splice(4,1)
+
+  console.log(json.nodes)
+
+  update(json.links, json.nodes);
+})

@@ -3,3 +3,10 @@ https://medium.com/ninjaconcept/interactive-dynamic-force-directed-graphs-with-d
 
 //simulation
 https://bl.ocks.org/mbostock/1095795
+
+//Marker middle
+http://bl.ocks.org/kenpenn/8d782030e4be9d832be7
+
+
+//Interactive general update pattern
+https://bl.ocks.org/cmgiven/32d4c53f19aea6e528faf10bfe4f3da9
