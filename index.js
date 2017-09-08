@@ -48,13 +48,13 @@ for(let i = 0; i < groupTopLevel.length - 1; i++){
   for(let j = i + 1; j < groupTopLevel.length; j++){
     let group2 = flattenGroupComponent(groupTopLevel[j])
     if(group1.intersection(group2).length > 0) {
-      console.log(groupTopLevel[i].id, groupTopLevel[j].id)
+      // console.log(groupTopLevel[i].id, groupTopLevel[j].id)
       linkGroupTopLevel.push({source: groupTopLevel[i].id, target: groupTopLevel[j].id})
     }
   }
 }
 
-console.log(groupTopLevel, linkGroupTopLevel)
+// console.log(groupTopLevel, linkGroupTopLevel)
 
 class Test{
   constructor(id, label, name){
@@ -66,15 +66,19 @@ class Test{
 
 let root = new Test(0, "root", "root")
 let node1 = new Test(1, "node1", "node1")
+let node2 = new Test(2, "node2", "node2")
+let node3 = new Test(11, "node3", "node3")
 
 
 
 var json = {
   "nodes": [
-    root, node1
+    root, node1, node2, node3
   ],
   "links": [
-    {source: 0, target: 1}
+    {source: 0, target: 1},
+    {source: 0, target: 2},
+    {source: 0, target: 3}
   ]
 }
 
@@ -193,14 +197,23 @@ svg.append('defs').append('marker')
         'xoverflow':'visible'})
     .append('svg:path')
     .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-    .attr('fill', '#ddd')
+    .attr('fill', 'red')
     .style('stroke','none');
 
 var simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function (d) {return d.id;}).distance(100).strength(1))
+    .force("link", d3.forceLink().distance((d) => {
+      if(d.source.id === 0 && d.target.id === 1) {
+        return 200
+      }
+      return 100
+    }).strength(1))
     .force("charge", d3.forceManyBody().strength(-100))
     .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("collision", d3.forceCollide().radius(50))
+    .force("collision", d3.forceCollide().radius((f)=> {
+      // console.log(f)
+
+      return 50
+    }))
 
 update(json.links, json.nodes);
 
@@ -210,7 +223,7 @@ function update(links, nodes) {
         .enter()
         .append("line")
         .attr("class", "link")
-        .attr('marker-end','url(#arrowhead)')
+        .attr('marker-mid','url(#arrowhead)')
 
 
 
@@ -248,7 +261,6 @@ function update(links, nodes) {
 
     node = svg.selectAll(".node")
         .data(nodes, function(d){
-          console.log(d)
           return d.test;
         })
         .enter()
@@ -263,12 +275,12 @@ function update(links, nodes) {
 
 
     node.on("mouseover", (d) => {
-      console.log(d)
+      // console.log(d)
     })
 
     node.append("circle")
         .attr("r", (data, i) => {
-            return 25 + 10 * (i % 3)
+            return 1 //25 + 10 * (i % 3)
         })
         .style("fill", function (d, i) {return "#ededed";})
 
