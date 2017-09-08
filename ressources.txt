@@ -1,6 +1,5 @@
 https://medium.com/ninjaconcept/interactive-dynamic-force-directed-graphs-with-d3-da720c6d7811
 
-
 //simulation
 https://bl.ocks.org/mbostock/1095795
 
