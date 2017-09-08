@@ -56,57 +56,80 @@ for(let i = 0; i < groupTopLevel.length - 1; i++){
 
 console.log(groupTopLevel, linkGroupTopLevel)
 
+class Test{
+  constructor(id, label, name){
+    this.id = id
+    this.label = label
+    this.name = name
+  }
+}
+
+let root = new Test(0, "root", "root")
+let node1 = new Test(1, "node1", "node1")
+
+
+
 var json = {
+  "nodes": [
+    root, node1
+  ],
+  "links": [
+    {source: 0, target: 1}
+  ]
+}
+
+
+var json2 = {
   "nodes": [
     {
       "name": "root",
       "label": "",
-      "id": 0
+      "test": 0
     },
     {
       "name": "TS.WCM",
       "label": "",
-      "id": 1
+      "test": 1
     },
     {
       "name": "TS.API",
       "label": "Database",
-      "id": 2
+      "test": 2
     },
     {
       "name": "Datalex",
       "label": "",
-      "id": 3
+      "test": 3
     },
     {
       "name": "Soft Voyage",
       "label": "",
-      "id": 4
+      "test": 4
     },
     {
       "name": "Backend",
       "label": "",
-      "id": 6
+      "test": 6
     },
     {
       "name": "Radixx DB",
       "label": "",
-      "id": 7
+      "test": 7
     },
     {
       "name": "External Web sites",
       "label": "",
-      "id": 9
+      "test": 9
     },
     {
       "name": "TS API Flight",
       "label": "",
-      "id": 10
+      "test": 10
     },
     {
       "name": "TS WCM Feeds",
       "label": "",
-      "id": 17
+      "test": 17
     },
   ],
   "links": [
@@ -189,6 +212,8 @@ function update(links, nodes) {
         .attr("class", "link")
         .attr('marker-end','url(#arrowhead)')
 
+
+
     link.append("title")
         .text(function (d) {return "to define";});
 
@@ -222,7 +247,10 @@ function update(links, nodes) {
     //     .text(function (d) {return d.type});
 
     node = svg.selectAll(".node")
-        .data(nodes)
+        .data(nodes, function(d){
+          console.log(d)
+          return d.test;
+        })
         .enter()
         .append("g")
         .attr("class", "node")
@@ -231,6 +259,8 @@ function update(links, nodes) {
                 .on("drag", dragged)
                 //.on("end", dragended)
         );
+
+
 
     node.on("mouseover", (d) => {
       console.log(d)
