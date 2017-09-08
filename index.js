@@ -55,10 +55,13 @@ for(let i = 0; i < groupTopLevel.length - 1; i++){
 }
 
 class Test{
-  constructor(id, label, name){
+  constructor(id, label, name, x, y){
     this.id = id
     this.label = label
     this.name = name
+    this.open = false
+    this.x = configuration.width / 2
+    this.y = configuration.height / 2
   }
 }
 
@@ -186,6 +189,8 @@ var svg = d3.select("svg"),
     link,
     edgepaths,
     edgelabels;
+
+    console.log(d3)
 svg.append('defs').append('marker')
     .attrs({'id':'arrowhead',
         'viewBox':'-0 -5 10 10',
@@ -202,12 +207,15 @@ svg.append('defs').append('marker')
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().distance((d) => {
-      // if(d.source.id === 0 && d.target.id === 1) {
-      //   return 200
-      // }
-      return 100
+      if(d.target.open === true){
+        return 250
+      }
+
+      return 50
     }).strength(1))
-    .force("charge", d3.forceManyBody().strength(-100))
+    .force("charge", d3.forceManyBody().strength( d => {
+      return 0
+    }))
     .force("center", d3.forceCenter(width / 2, height / 2))
     .force("collision", d3.forceCollide().radius((f) => {
       return 50
@@ -285,8 +293,12 @@ function update(links, nodes) {
       // console.log(d)
     })
     nodeEnter.append("circle")
-        .attr("r", (data, i) => {
-            return 5 //25 + 10 * (i % 3)
+        .attrs({
+          "r": (data, i) => {
+            return 25 + 10 * (i % 3)
+          },
+          "x": 500,
+          "y": 500
         })
         .style("fill", function (d, i) {return "#ededed";})
     nodeEnter.append("title")
@@ -311,7 +323,6 @@ function update(links, nodes) {
       .enter()
       .append("line")
       .attr("class", "link")
-
     linkEnter.merge(link)
 
     node = svg.selectAll(".node")
@@ -358,12 +369,17 @@ function dragged(d) {
 }
 
 document.querySelector("#add").addEventListener("click", (event) => {
-  json.nodes[4] = node4
+  json.nodes.push(node4)
+
+  node1.open = true
+
+  json.links.push({source: node1, target: node4})
 
   update(json.links, json.nodes);
 })
 document.querySelector("#remove").addEventListener("click", (event) => {
-  json.nodes.splice(4,1)
+  json.nodes.pop()
+  json.links.pop()
 
   console.log(json.nodes)
 

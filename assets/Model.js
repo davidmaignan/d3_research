@@ -94,5 +94,4 @@ class Sensor {
 
 class SensorType extends Enum {}
 
-
 export {Group, Component, Sensor, SensorType}
