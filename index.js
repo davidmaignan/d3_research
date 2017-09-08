@@ -209,9 +209,10 @@ var simulation = d3.forceSimulation()
     }).strength(1))
     .force("charge", d3.forceManyBody().strength(-100))
     .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("collision", d3.forceCollide().radius((f)=> {
+    .force("collision", d3.forceCollide().radius((f) => {
       return 50
     }))
+    .on("tick", ticked);
 
 let index = 0
 // var ajout = d3.interval(() => {
@@ -231,15 +232,15 @@ let index = 0
 update(json.links, json.nodes);
 
 function update(links, nodes) {
-    link = svg.selectAll(".link")
-        .data(links)
-        .enter()
-        .append("line")
-        .attr("class", "link")
-        .attr('marker-end','url(#arrowhead)')
-
-    link.append("title")
-        .text(function (d) {return "to define";});
+    // link = svg.selectAll(".link")
+    //     .data(links)
+    //     .enter()
+    //     .append("line")
+    //     .attr("class", "link")
+    //     .attr('marker-end','url(#arrowhead)')
+    //
+    // link.append("title")
+    //     .text(function (d) {return "to define";});
     // edgepaths = svg.selectAll(".edgepath")
     //     .data(links)
     //     .enter()
@@ -280,20 +281,16 @@ function update(links, nodes) {
 
     node.exit().remove()
     nodeEnter.merge(node)
-
     nodeEnter.on("mouseover", (d) => {
       // console.log(d)
     })
-
     nodeEnter.append("circle")
         .attr("r", (data, i) => {
             return 5 //25 + 10 * (i % 3)
         })
         .style("fill", function (d, i) {return "#ededed";})
-
     nodeEnter.append("title")
         .text(function (d) {return d.id;});
-
     nodeEnter.append("text")
         .attrs({
           "dx": -10,
@@ -304,15 +301,24 @@ function update(links, nodes) {
         })
         .text(function (d) {return "." ;});
 
+    link = svg.selectAll(".link")
+    link = link.data(links, function(d) {
+      return d.source.id + "-" + d.target.id;
+    });
+    link.exit().remove();
+
+    let linkEnter = link
+      .enter()
+      .append("line")
+      .attr("class", "link")
+
+    linkEnter.merge(link)
+
     node = svg.selectAll(".node")
+    link = svg.selectAll(".link")
 
-    simulation
-        .nodes(nodes)
-        .on("tick", ticked);
-
-    simulation.force("link")
-        .links(links);
-
+    simulation.nodes(nodes)
+    simulation.force("link").links(links);
     simulation.alpha(1).restart();
 }
 
@@ -353,8 +359,6 @@ function dragged(d) {
 
 document.querySelector("#add").addEventListener("click", (event) => {
   json.nodes[4] = node4
-
-  console.log(json.nodes)
 
   update(json.links, json.nodes);
 })
