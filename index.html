@@ -2,6 +2,7 @@
   <head>
     <title>Getting Started</title>
     <script src="https://unpkg.com/lodash@4.16.6"></script>
+
     <style>
       line {
       stroke: #efefef;
@@ -12,16 +13,60 @@
 
       .node {}
 
-        .link { stroke: #999; stroke-opacity: .6; stroke-width: 1px; }
+      .node-hover{
+        color: red;
+      }
+
+      .link { stroke: #999; stroke-opacity: .6; stroke-width: 1px; }
       svg {
         border: 1px solid #ddd
       }
+
+      .popover{
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1060;
+        display: block;
+        max-width: 276px;
+        padding: 1px;
+        font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        letter-spacing: normal;
+        line-break: auto;
+        line-height: 1.5;
+        text-align: left;
+        text-align: start;
+        text-decoration: none;
+        text-shadow: none;
+        text-transform: none;
+        white-space: normal;
+        word-break: normal;
+        word-spacing: normal;
+        font-size: 1rem;
+        word-wrap: break-word;
+        background-color: #fff;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid rgba(0,0,0,.2);
+        border-radius: .5rem;
+        padding: 10px
+      }
+
+      ul{
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
     </style>
   </head>
   <body>
 
     <svg width="960" height="600"></svg>
     <p><button id="btn">click</button></p>
+
     <script src="./dist/bundle.js"></script>
   </body>
 </html>
