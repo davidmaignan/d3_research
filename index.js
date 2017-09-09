@@ -10,13 +10,36 @@ import { Group } from './assets/Model.js'
 d3.selection.prototype.attrs = selection_attrs
 d3.selection.prototype.styles = selection_styles
 
+var width  = 1500;           // width of svg image
+var height = 600;           // height of svg image
+var margin = 15;            // amount of margin around plot area
+var pad = margin / 2;       // actual padding amount
+var radius = 6;             // fixed node radius
+var yfixed = pad + radius;  // y position for all nodes
+
 let configuration = {
-  width: 800,
-  height: 800
+  "width": 2000,
+  "height": 800,
+  "node":{
+    "x": 0,
+    "y": 160
+  }
 }
 
 let groupTopLevel = groupSet.filter(g => g.isTopLevel())
 groupTopLevel = groupTopLevel.toArray()
+
+var nodes = new Set()
+var links = new Set()
+
+groupSet.forEach(g => {
+  nodes.add(g)
+  g.components.forEach(c => {
+    nodes.add(c)
+  })
+})
+
+
 
 let linkGroupTopLevel = []
 
@@ -28,13 +51,14 @@ function flattenGroupComponent(grp){
 
   return list
 }
-function flattenGroupComponentList(list, grp){
+function flattenGroupComponentList(list, g){
 
-  grp.groups.forEach((grp) => {
+  g.groups.forEach((grp) => {
+    links.add({'source': g, 'target': grp})
     flattenGroupComponentList(list, grp)
   })
 
-  grp.components.forEach((cmp) => {
+  g.components.forEach((cmp) => {
     flattenComponentListRec(list, cmp)
   })
 }
@@ -54,289 +78,103 @@ for(let i = 0; i < groupTopLevel.length - 1; i++){
   }
 }
 
-// console.log(groupTopLevel, linkGroupTopLevel)
+nodes = nodes.toArray()
 
-class Test{
-  constructor(id, label, name){
-    this.id = id
-    this.label = label
-    this.name = name
-  }
-}
+links.toArray().forEach(function(d, i) {
+    d.source = nodes[d.source.id];
+    d.target = nodes[d.target.id];
+});
 
-let root = new Test(0, "root", "root")
-let node1 = new Test(1, "node1", "node1")
-let node2 = new Test(2, "node2", "node2")
-let node3 = new Test(11, "node3", "node3")
+var svg  = d3.select("svg")
+        .attr("id", "arc")
+        .attr("width", configuration.width)
+        .attr("height", configuration.height);
+
+var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+var nodeContainer = svg.append("g")
+       .attrs({
+         "id": "nodeContainer",
+         "transform": `translate(10, 10)`,
+       })
+
+nodeContainer.selectAll(".node")
+       .data(nodes)
+       .enter()
+       .append("circle")
+       .attr("class", "node")
+       .attr("id", function(d, i) { return d.name; })
+       .attr("cx", function(d, i) { return i * 20 })
+       .attr("cy", function(d, i) { return configuration.node.y; })
+       .attr("r",  function(d, i) { return radius; })
+       .style("fill",   function(d, i) { return color(d.group); })
+
+nodeContainer.selectAll(".text")
+  .data(nodes)
+  .enter()
+  .append("text")
+  .attrs({
+    "class": "text",
+    "font-family": "arial",
+    "font-size": "12px",
+    "fill": "#aaa",
+    "transform": "rotate(-90 80 6.5)",
+    "x": "-60",
+    "y": (d, i) => {return i * 20 - 70},
+  })
+  .text(node => {
+    return node.name
+  })
+
+// scale to generate radians (just for lower-half of circle)
+var radians = d3.scaleLinear()
+    .range([Math.PI / 2, 3 * Math.PI / 2]);
+
+// path generator for arcs (uses polar coordinates)
+var arc = d3.lineRadial()
+    .angle(function(d) { return radians(d); });
 
 
-
-var json = {
-  "nodes": [
-    root, node1, node2, node3
-  ],
-  "links": [
-    {source: 0, target: 1},
-    {source: 0, target: 2},
-    {source: 0, target: 3}
-  ]
-}
-
-
-var json2 = {
-  "nodes": [
-    {
-      "name": "root",
-      "label": "",
-      "test": 0
-    },
-    {
-      "name": "TS.WCM",
-      "label": "",
-      "test": 1
-    },
-    {
-      "name": "TS.API",
-      "label": "Database",
-      "test": 2
-    },
-    {
-      "name": "Datalex",
-      "label": "",
-      "test": 3
-    },
-    {
-      "name": "Soft Voyage",
-      "label": "",
-      "test": 4
-    },
-    {
-      "name": "Backend",
-      "label": "",
-      "test": 6
-    },
-    {
-      "name": "Radixx DB",
-      "label": "",
-      "test": 7
-    },
-    {
-      "name": "External Web sites",
-      "label": "",
-      "test": 9
-    },
-    {
-      "name": "TS API Flight",
-      "label": "",
-      "test": 10
-    },
-    {
-      "name": "TS WCM Feeds",
-      "label": "",
-      "test": 17
-    },
-  ],
-  "links": [
-    {
-      "source": 0,
-      "target": 1,
-    },
-    {
-      "source": 0,
-      "target": 2,
-    },
-    {
-      "source": 0,
-      "target": 3,
-    },
-    {
-      "source": 0,
-      "target": 4,
-    },
-    {
-      "source": 0,
-      "target": 6,
-    },
-    {
-      "source": 0,
-      "target": 7,
-    },
-    {
-      "source": 0,
-      "target": 9,
-    },
-    {
-      "source": 0,
-      "target": 10,
-    },
-    {
-      "source": 0,
-      "target": 17,
-    }
-  ]
-}
-
-var colors = d3.scaleOrdinal(d3.schemeCategory10);
-
-var svg = d3.select("svg"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height"),
-    node,
-    link,
-    edgepaths,
-    edgelabels;
-
-svg.append('defs').append('marker')
-    .attrs({'id':'arrowhead',
-        'viewBox':'-0 -5 10 10',
-        'refX':13,
-        'refY':0,
-        'orient':'auto',
-        'markerWidth':13,
-        'markerHeight':13,
-        'xoverflow':'visible'})
-    .append('svg:path')
-    .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-    .attr('fill', 'red')
-    .style('stroke','none');
-
-var simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().distance((d) => {
-      if(d.source.id === 0 && d.target.id === 1) {
-        return 200
-      }
-      return 100
-    }).strength(1))
-    .force("charge", d3.forceManyBody().strength(-100))
-    .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("collision", d3.forceCollide().radius((f)=> {
-      // console.log(f)
-
-      return 50
-    }))
-
-update(json.links, json.nodes);
-
-function update(links, nodes) {
-    link = svg.selectAll(".link")
-        .data(links)
+nodeContainer.selectAll(".link")
+        .data(links.toArray())
         .enter()
-        .append("line")
+        .append("path")
+        .styles({
+          "fill": "none",
+          "stroke": "#888888",
+          "stroke-weight": "1px",
+          "stroke-opacity": 0.5
+        })
         .attr("class", "link")
-        .attr('marker-mid','url(#arrowhead)')
+        .attr("transform", function(d, i) {
+
+            console.log(d.source.name)
+
+            let sourceNode = d3.select(`circle[id='${d.source.name}']`);
 
 
+            console.log(d3.select(`circle[id='${d.target.name}']`).attr("cx"))
 
-    link.append("title")
-        .text(function (d) {return "to define";});
+            d.source.x = parseInt(d3.select(`circle[id='${d.source.name}']`).attr("cx"))
+            d.target.x = parseInt(d3.select(`circle[id='${d.target.name}']`).attr("cx"))
 
-    // edgepaths = svg.selectAll(".edgepath")
-    //     .data(links)
-    //     .enter()
-    //     .append('path')
-    //     .attrs({
-    //         'class': 'edgepath',
-    //         'fill-opacity': 0,
-    //         'stroke-opacity': 0,
-    //         'id': function (d, i) {return 'edgepath' + i}
-    //     })
-    //     .style("pointer-events", "none");
-    // edgelabels = svg.selectAll(".edgelabel")
-    //     .data(links)
-    //     .enter()
-    //     .append('text')
-    //     .style("pointer-events", "none")
-    //     .attrs({
-    //         'class': 'edgelabel',
-    //         'id': function (d, i) {return 'edgelabel' + i},
-    //         'font-size': 10,
-    //         'fill': '#aaa'
-    //     });
-    // edgelabels.append('textPath')
-    //     .attr('xlink:href', function (d, i) {return '#edgepath' + i})
-    //     .style("text-anchor", "middle")
-    //     .style("pointer-events", "none")
-    //     .attr("startOffset", "50%")
-    //     .text(function (d) {return d.type});
-
-    node = svg.selectAll(".node")
-        .data(nodes, function(d){
-          return d.test;
+            var xshift = d.source.x + (d.target.x - d.source.x) / 2;
+            var yshift = 160;
+            return "translate(" + xshift + ", " + yshift + ")";
         })
-        .enter()
-        .append("g")
-        .attr("class", "node")
-        .call(d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                //.on("end", dragended)
-        );
+        .attr("d", function(d, i) {
+            // get x distance between source and target
+            var xdist = Math.abs(d.source.x - d.target.x);
 
+            // set arc radius based on x distance
+            arc.radius(xdist / 2);
 
+            // want to generate 1/3 as many points per pixel in x direction
+            var points = d3.range(0, Math.ceil(xdist / 3));
 
-    node.on("mouseover", (d) => {
-      // console.log(d)
-    })
+            // set radian scale domain
+            radians.domain([0, points.length - 1]);
 
-    node.append("circle")
-        .attr("r", (data, i) => {
-            return 1 //25 + 10 * (i % 3)
-        })
-        .style("fill", function (d, i) {return "#ededed";})
-
-    node.append("title")
-        .text(function (d) {return d.id;});
-
-    node.append("text")
-        .attrs({
-          "dx": -10,
-          "dy": -3,
-          "font-family": "sans",
-          "font-size": 15
-        })
-        .text(function (d) {return d.name ;});
-
-    simulation
-        .nodes(nodes)
-        .on("tick", ticked);
-
-    simulation.force("link")
-        .links(links);
-}
-
-function ticked() {
-    link.attr("x1", function (d) {return d.source.x;})
-        .attr("y1", function (d) {return d.source.y;})
-        .attr("x2", function (d) {return d.target.x;})
-        .attr("y2", function (d) {return d.target.y;});
-
-    node.attr("transform", function (d) {return "translate(" + d.x + ", " + d.y + ")";});
-
-    // edgepaths.attr('d', function (d) {
-    //     return 'M ' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y;
-    // });
-    //
-    // edgelabels.attr('transform', function (d) {
-    //     if (d.target.x < d.source.x) {
-    //         var bbox = this.getBBox();
-    //
-    //         let rx = bbox.x + bbox.width / 2;
-    //         let ry = bbox.y + bbox.height / 2;
-    //         return 'rotate(180 ' + rx + ' ' + ry + ')';
-    //     }
-    //     else {
-    //         return 'rotate(0)';
-    //     }
-    // });
-}
-
-function dragstarted(d) {
-    if (!d3.event.active) simulation.alphaTarget(0.3).restart()
-    d.fx = d.x;
-    d.fy = d.y;
-}
-
-function dragged(d) {
-    d.fx = d3.event.x;
-    d.fy = d3.event.y;
-}
+            // return path for arc
+            return arc(points);
+        });
