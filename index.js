@@ -91,90 +91,46 @@ for(let i = 0; i < groupTopLevel.length - 1; i++){
   }
 }
 
-var svg  = d3.select("svg")
+const svg  = d3.select("svg")
         .attr("id", "arc")
         .attr("width", configuration.width)
         .attr("height", configuration.height);
-
-var color = d3.scaleOrdinal(d3.schemeCategory10);
-
-var linkContainer = svg.append("g")
-.attrs({
-  "id": "linkContainer",
-  "transform": `translate(10, 10)`,
-})
-
-var nodeContainer = svg.append("g")
-   .attrs({
-     "id": "nodeContainer",
-     "transform": `translate(10, 10)`,
-   })
-
-var popover = d3.select("body")
+const color = d3.scaleOrdinal(d3.schemeCategory10);
+let link = svg.append("g").selectAll(".link")
+let node = svg.append("g").selectAll(".node")
+let text = svg.append("g").selectAll(".text")
+const popover = d3.select("body")
        	.append("div")
         .attr('class', 'popover')
        	.style("position", "absolute")
        	.style("z-index", "10")
        	.style("visibility", "hidden")
-
-let mouseover = (node) => {
+const mouseover = (d) => {
   popover.style("visibility", "visible")
 
-  let x = parseInt(d3.select(`circle[id='${node.name}']`).attr("cx"))
+  let x = parseInt(d3.select(`circle[id='${d.name}']`).attr("cx"))
 
-  popover.style("left", x)
-  popover.style("top", "200px")
-  popover.html(`<ul><li>id: ${node.id}</li><li>${node.name}</li></ul>`)
+  popover.style("left", x + 50)
+  popover.style("top", "300px")
+  popover.html(`<ul><li>id: ${d.id}</li><li>${d.name}</li></ul>`)
 
-  d3.selectAll('.' + node.getClassName()).classed("hover", true)
+  node.each((n) => {n.target = n.source = false;})
+  node.classed("hover", false).filter((l) => {return l === d}).classed("hover", true)
+  text.classed("hover", false).filter((l) => {return l === d}).classed("hover", true)
 
-  d3.selectAll('.link').classed("dimmed", true)
+  link.classed("hover-parent", function(l) { if (l.target === d) return l.source.source = true; })
+      .classed("hover-child", function(l) { if (l.source === d) return l.target.target = true; })
+      .filter(function(l) { return l.target === d || l.source === d; })
+      .raise();
 
-  links.filter( l => l.target === node).forEach(t => {
-    d3.selectAll('.' + t.target.getClassName() + '-target').classed("hover-parent", true)
-    d3.select(`circle[id='${t.source.name}']`).classed("hover-parent", true)
-    d3.select(`text[id='${t.source.getClassName()}-text']`).classed("hover-parent", true)
-  })
-
-  links.filter( l => l.source === node).forEach(t => {
-    d3.selectAll('.' + t.source.getClassName() + '-source').classed("hover-child", true)
-    d3.select(`circle[id='${t.target.name}']`).classed("hover-child", true)
-    d3.select(`text[id='${t.target.getClassName()}-text']`).classed("hover-child", true)
-  })
+  node.classed("hover-child", function(n) { return n.target; })
+      .classed("hover-parent", function(n) { return n.source; });
 }
-let mouseout = (node) => {
-  d3.selectAll('.' + node.getClassName()).classed("hover", false)
-  d3.selectAll('.link').classed("dimmed", false)
-
-  // node
-  //     .each(function(n) { n.target = n.source = false; });
-  //
-  // link
-  //     .classed("link--target", function(l) { if (l.target === d) return l.source.source = true; })
-  //     .classed("link--source", function(l) { if (l.source === d) return l.target.target = true; })
-  //   .filter(function(l) { return l.target === d || l.source === d; })
-  //     .raise();
-  //
-  // node
-  //     .classed("node--target", function(n) { return n.target; })
-  //     .classed("node--source", function(n) { return n.source; });
-
-  node.each(function(n) { n.target = n.source = false; });
-
-  links.filter( l => l.target === node).forEach(t => {
-    d3.selectAll('.' + t.target.getClassName() + '-target').classed("hover-parent", false)
-    d3.select(`circle[id='${t.source.name}']`).classed("hover-parent", false)
-    d3.select(`text[id='${t.source.getClassName()}-text']`).classed("hover-parent", false)
-  })
-  links.filter( l => l.source === node).forEach(t => {
-    d3.selectAll('.' + t.source.getClassName() + '-source').classed("hover-child", false)
-    d3.select(`circle[id='${t.target.name}']`).classed("hover-child", false)
-    d3.select(`text[id='${t.target.getClassName()}-text']`).classed("hover-child", false)
-  })
+const mouseout = (node) => {
   popover.style("visibility", "hidden")
 }
-nodeContainer.selectAll(".node")
-       .data(nodes)
+
+node = node.data(nodes)
        .enter()
        .append("circle")
        .attr("class", (node) => {
@@ -187,8 +143,12 @@ nodeContainer.selectAll(".node")
        .on("mouseover", mouseover)
        .on('mouseout', mouseout)
 
-nodeContainer.selectAll(".text")
-  .data(nodes)
+let radians = d3.scaleLinear()
+    .range([Math.PI / 2, 3 * Math.PI / 2]);
+let arc = d3.lineRadial()
+    .angle(function(d) { return radians(d); });
+
+text = text.data(nodes)
   .enter()
   .append("text")
   .attrs({
@@ -205,18 +165,7 @@ nodeContainer.selectAll(".text")
   })
   .on("mouseover", mouseover)
   .on('mouseout', mouseout)
-
-// scale to generate radians (just for lower-half of circle)
-var radians = d3.scaleLinear()
-    .range([Math.PI / 2, 3 * Math.PI / 2]);
-
-// path generator for arcs (uses polar coordinates)
-var arc = d3.lineRadial()
-    .angle(function(d) { return radians(d); });
-
-
-linkContainer.selectAll(".link")
-  .data(links.toArray())
+link = link.data(links)
   .enter()
   .append("path")
   .attr("class", (link) => {
@@ -238,4 +187,4 @@ linkContainer.selectAll(".link")
       radians.domain([0, points.length - 1]);
 
       return arc(points);
-  });
+  })
