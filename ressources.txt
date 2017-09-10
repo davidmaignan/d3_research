@@ -11,3 +11,6 @@ http://elijahmeeks.com/#essays
 
 
 https://www.sarasoueidan.com/blog/svg-transformations/
+
+//Hierarchical Edge Bundling
+https://bl.ocks.org/mbostock/7607999
