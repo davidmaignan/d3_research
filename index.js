@@ -146,6 +146,21 @@ let mouseout = (node) => {
   d3.selectAll('.' + node.getClassName()).classed("hover", false)
   d3.selectAll('.link').classed("dimmed", false)
 
+  // node
+  //     .each(function(n) { n.target = n.source = false; });
+  //
+  // link
+  //     .classed("link--target", function(l) { if (l.target === d) return l.source.source = true; })
+  //     .classed("link--source", function(l) { if (l.source === d) return l.target.target = true; })
+  //   .filter(function(l) { return l.target === d || l.source === d; })
+  //     .raise();
+  //
+  // node
+  //     .classed("node--target", function(n) { return n.target; })
+  //     .classed("node--source", function(n) { return n.source; });
+
+  node.each(function(n) { n.target = n.source = false; });
+
   links.filter( l => l.target === node).forEach(t => {
     d3.selectAll('.' + t.target.getClassName() + '-target').classed("hover-parent", false)
     d3.select(`circle[id='${t.source.name}']`).classed("hover-parent", false)
