@@ -1,128 +1,73 @@
-<html>
-  <head>
-    <title>Getting Started</title>
-    <script src="https://unpkg.com/lodash@4.16.6"></script>
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <meta name="description" content="">
+   <meta name="author" content="">
+   <link rel="icon" href="favicon.ico">
 
-    <style>
-      svg {
-        border: 1px solid #ddd;
-        padding: 30px;
-        margin: 30px;
-      }
+   <title>Fixed top navbar example for Bootstrap</title>
 
-      circle {
-        fill: #efefef;
-      }
+   <!-- Bootstrap core CSS -->
+   <link href="./assets/css/bootstrap.css" rel="stylesheet" type="text/css">
 
-      text{
-        fill: #aaa
-      }
+   <!-- Custom styles for this template -->
+   <link href="./assets/css/styles.css" rel="stylesheet">
+   <script src="https://unpkg.com/lodash@4.16.6"></script>
 
-      .node{
-        fill: #1f77b4
-      }
 
-      .node.hover{
-        fill: red
-      }
-
-      .node.hover-parent{
-        fill: #4FB8C2
-      }
-
-      .node.hover-child{
-        fill: #FF5733
-      }
-
-      .link {
-        fill: none;
-        stroke: #666;
-        stroke-opacity: .3;
-        stroke-width: 1;
-      }
-
-      .dimmed{
-        stroke-opacity: .3
-      }
-
-      .link.hover{
-        stroke: red;
-      }
-
-      .link.hover-parent{
-        stroke: #4FB8C2;
-        stroke-opacity: 1;
-        stroke-width: 3;
-      }
-
-      .link.hover-child{
-        stroke: #FF5733;
-        stroke-opacity: 1;
-        stroke-width: 3;
-      }
-
-      .text{
-        "font-family": "arial";
-        "font-size": "12px";
-        "fill": "#ddd";
-      }
-
-      .text.hover, .node.hover{
-        fill: red
-      }
-
-      .text.hover-parent, .node.hover-parent{
-        fill: #4FB8C2
-      }
-
-      .text.hover-child, .node.hover-child{
-        fill: #FF5733
-      }
-
-      .popover{
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1060;
-        display: block;
-        max-width: 276px;
-        padding: 1px;
-        font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-        font-style: normal;
-        font-weight: 400;
-        letter-spacing: normal;
-        line-break: auto;
-        line-height: 1.5;
-        text-align: left;
-        text-align: start;
-        text-decoration: none;
-        text-shadow: none;
-        text-transform: none;
-        white-space: normal;
-        word-break: normal;
-        word-spacing: normal;
-        font-size: 1rem;
-        word-wrap: break-word;
-        background-color: #fff;
-        -webkit-background-clip: padding-box;
-        background-clip: padding-box;
-        border: 1px solid rgba(0,0,0,.2);
-        border-radius: .5rem;
-        padding: 10px
-      }
-
-      ul{
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-
-    </style>
   </head>
   <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+     <a class="navbar-brand" href="#">TS.IO</a>
+     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+       <span class="navbar-toggler-icon"></span>
+     </button>
+     <div class="collapse navbar-collapse" id="navbarCollapse">
+       <ul class="navbar-nav mr-auto">
+         <li class="nav-item active">
+           <a class="nav-link" href="#">Arc <span class="sr-only">(current)</span></a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="#">Matrix</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="#">Force</a>
+         </li>
+       </ul>
+       <button class="btn">
+        Configuration
+      </button>
+     </div>
+   </nav>
+   <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <svg width="960" height="600"></svg>
+        </div>
+      </div>
+    </div>
 
-    <svg width="960" height="600"></svg>
-    <p><button id="btn">click</button></p>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="./dist/bundle.js"></script>
   </body>
