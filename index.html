@@ -4,22 +4,77 @@
     <script src="https://unpkg.com/lodash@4.16.6"></script>
 
     <style>
-      line {
-      stroke: #efefef;
+      svg {
+        border: 1px solid #ddd
       }
+
       circle {
         fill: #efefef;
       }
 
-      .node {}
-
-      .node-hover{
-        color: red;
+      text{
+        fill: #aaa
       }
 
-      .link { stroke: #999; stroke-opacity: .6; stroke-width: 1px; }
-      svg {
-        border: 1px solid #ddd
+      .node{
+        fill: #1f77b4
+      }
+
+      .node.hover{
+        fill: red
+      }
+
+      .node.hover-parent{
+        fill: #4FB8C2
+      }
+
+      .node.hover-child{
+        fill: #FF5733
+      }
+
+      .link {
+        fill: none;
+        stroke: #666;
+        stroke-opacity: .6;
+        stroke-width: 1;
+      }
+
+      .dimmed{
+        stroke-opacity: .3
+      }
+
+      .link.hover{
+        stroke: red;
+      }
+
+      .link.hover-parent{
+        stroke: #4FB8C2;
+        stroke-opacity: 1;
+        stroke-width: 4;
+      }
+
+      .link.hover-child{
+        stroke: #FF5733;
+        stroke-opacity: 1;
+        stroke-width: 4;
+      }
+
+      .text{
+        "font-family": "arial";
+        "font-size": "12px";
+        "fill": "#ddd";
+      }
+
+      .text.hover, .node.hover{
+        fill: red
+      }
+
+      .text.hover-parent, .node.hover-parent{
+        fill: #4FB8C2
+      }
+
+      .text.hover-child, .node.hover-child{
+        fill: #FF5733
       }
 
       .popover{

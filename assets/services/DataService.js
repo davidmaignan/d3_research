@@ -25,7 +25,10 @@ for (let i in fixtures.sensors){
 let componentSet = require("collections/set")
 componentSet = new Set();
 
+let cmpCounter = 0;
+
 for(let i in fixtures.components){
+  cmpCounter++
   let c = fixtures.components[i]
 
   componentSet.add(new Component(parseInt(c.id), c.name, c.dependencies))
@@ -51,6 +54,7 @@ for (let i in fixtures.groups) {
 groupSet.forEach((g) => {
   let componentIds = g.getComponentIds()
   let components = componentSet.filter(cmp => componentIds.includes(cmp.getId()))
+  console.log(`groupId: ${g.id} : components: ${components.length}`)
   g.addComponents(components)
 
   let groupIds = g.getGroupIds()
@@ -62,4 +66,4 @@ groupSet.forEach((g) => {
   g.addGroups(groupList)
 })
 
-export { groupSet }
+export { groupSet, componentSet }

@@ -92,6 +92,13 @@ class Sensor {
   }
 }
 
+var replaceAll = function() {
+  return this.name.replace(/[ .]/g, "-")
+}
+
+Group.prototype.getClassName = replaceAll
+Component.prototype.getClassName = replaceAll
+
 class SensorType extends Enum {}
 
 
