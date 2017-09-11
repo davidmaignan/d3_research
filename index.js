@@ -55,17 +55,19 @@ for(let i = 0; i < groupTopLevel.length - 1; i++){
 }
 
 class Test{
-  constructor(id, label, name, x, y){
+  constructor(id, label, name, fixed){
     this.id = id
     this.label = label
     this.name = name
-    this.open = false
-    this.x = configuration.width / 2
-    this.y = configuration.height / 2
+    this.r = 10
+    if (this.id === 0) {
+      d.fx = wid
+      d.fy = d.y;
+    }
   }
 }
 
-let node0 = new Test(0, "root", "root")
+let node0 = new Test(0, "root", "root", true)
 let node1 = new Test(1, "node1", "node1")
 let node2 = new Test(2, "node2", "node2")
 let node3 = new Test(3, "node3", "node3")
@@ -190,7 +192,6 @@ var svg = d3.select("svg"),
     edgepaths,
     edgelabels;
 
-    console.log(d3)
 svg.append('defs').append('marker')
     .attrs({'id':'arrowhead',
         'viewBox':'-0 -5 10 10',
@@ -206,16 +207,10 @@ svg.append('defs').append('marker')
     .style('stroke','none');
 
 var simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().distance((d) => {
-      if(d.target.open === true){
-        return 250
-      }
-
-      return 50
-    }).strength(1))
-    .force("charge", d3.forceManyBody().strength( d => {
-      return 0
-    }))
+    // .force('x', d3.forceX().x(300))
+    // .force('y', d3.forceY().y(100))
+    .force("link", d3.forceLink().distance(50).strength(1))
+    .force("charge", d3.forceManyBody().strength(10))
     .force("center", d3.forceCenter(width / 2, height / 2))
     .force("collision", d3.forceCollide().radius((f) => {
       return 50
