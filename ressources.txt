@@ -16,6 +16,7 @@ https://www.sarasoueidan.com/blog/svg-transformations/
 https://bl.ocks.org/mbostock/7607999
 
 
-//Testing 
+
+//Testing
 https://cafedev.org/article/2016/12/testing-with-wepack-2-inject-loader-karma-mocha-chai-and-sinon/
 https://medium.com/daily-js-tips/configuring-webpack-to-write-js-with-es6-es2015-on-browser-cd089a79ecea
