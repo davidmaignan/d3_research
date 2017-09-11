@@ -1,5 +1,5 @@
 import {schema, fixtures} from '../fixtures.js';
-import {Group, Component, Sensor} from '../Model.js'
+import {Group, Component, Sensor, Model} from '../model/Model.js'
 
 //valide and load fixtures
 var Ajv = require('ajv');
@@ -50,20 +50,18 @@ for (let i in fixtures.groups) {
   groupSet.add(new Group(g.groupId, g.name, g.componentIds, g.groupIds))
 }
 
-
 groupSet.forEach((g) => {
   let componentIds = g.getComponentIds()
   let components = componentSet.filter(cmp => componentIds.includes(cmp.getId()))
-  console.log(`groupId: ${g.id} : components: ${components.length}`)
   g.addComponents(components)
 
   let groupIds = g.getGroupIds()
   let groupList = groupSet.filter(g => groupIds.includes(g.getId()))
 
-  // groupList.forEach(grp => g.addGroupParent(g))
-
   groupList.forEach(g => g.setTopLevel(false)) //@todo refactor
   g.addGroups(groupList)
 })
 
-export { groupSet, componentSet }
+let modele = new Model(groupSet, componentSet, sensorSet)
+
+export { groupSet, componentSet, modele }

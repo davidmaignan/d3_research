@@ -17,41 +17,46 @@ class Group {
   getGroupIds(){
     return this.groupIds
   }
-
   getComponentIds(){
     return this.compnenentIds
   }
-
   getId(){
     return this.id
   }
-
   addComponents(componentList){
     componentList.forEach((c) =>{
       this.addComponent(c)
     })
   }
-
   addComponent(component){
     this.components.add(component)
   }
-
   addGroups(groupList){
     groupList.forEach((g) =>{
       this.addGroup(g)
     })
   }
-
   addGroup(group){
     this.groups.add(group)
   }
-
   setTopLevel(bool){
     this.topLevel = bool
   }
-
   isTopLevel(){
     return this.topLevel
+  }
+  printDependencies(){
+    return this.components.map((d) => {return d.name}).join("<br>")
+  }
+  linked(target){
+    return {'source': this, 'target': target}
+  }
+  getLinks(){
+    let links = this.groups.map((g) => {return this.linked(g)})
+
+    this.components.reduce((ar, c) => {ar.push(this.linked(c)); return ar}, links)
+
+    return links
   }
 }
 
@@ -62,23 +67,28 @@ class Component {
     this.dependenciesIds = dependenciesIds
     this.dependencies = new Set()
   }
-
   getId(){
     return this.id
   }
-
   getDependenciesIds(){
     return this.dependenciesIds
   }
-
   addDependencies(componentList){
     componentList.forEach((c) =>{
       this.addDependency(c)
     })
   }
-
   addDependency(component){
     this.dependencies.add(component)
+  }
+  printDependencies(){
+    return this.dependencies.map((d) => {return d.name}).join("<br>")
+  }
+  linked(target){
+    return {'source': this, 'target': target}
+  }
+  getLinks(){
+    return this.dependencies.reduce((ar, g) => {ar.push(this.linked(g)); return ar}, [])
   }
 }
 
@@ -92,6 +102,28 @@ class Sensor {
   }
 }
 
+class Model {
+  constructor(groups, components, sensors){
+    this.groups = groups
+    this.components = components
+    this.sensors = sensors
+  }
+
+  getNodes(){
+    return this.groups.toArray().concat(this.components.toArray())
+  }
+
+  getLinks(){
+    let links = this.groups.reduce((result, g) => {return result.concat(g.getLinks())}, [])
+
+    return this.components.reduce((result, c) => {return result.concat(c.getLinks())}, links)
+  }
+}
+
+Group.prototype.toString = function() {
+  return this.id.toString()
+}
+
 var replaceAll = function() {
   return this.name.replace(/[ .]/g, "-")
 }
@@ -101,5 +133,4 @@ Component.prototype.getClassName = replaceAll
 
 class SensorType extends Enum {}
 
-
-export {Group, Component, Sensor, SensorType}
+export {Group, Component, Sensor, SensorType, Model}
