@@ -141,28 +141,27 @@ var data = {
 
 var root2 = d3.hierarchy(data)
 
-cluster(root2)
-
 console.log(root2)
-// cluster(root2)
-// console.log(root2)
+cluster(root2)
+console.log(root2.leaves())
 
 link = link
-    .data(nodeLinks(root.leaves()))
+    .data(packageImports(root.leaves()))
     .enter().append("path")
       .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
       .attr("class", "link")
       .attr("d", line);
 
   node = node
-    .data(root2.leaves())
+    .data(root.leaves())
     .enter().append("text")
       .attr("class", "node")
       .attr("dy", "0.31em")
       .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + 8) + ",0)" + (d.x < 180 ? "" : "rotate(180)"); })
       .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
-      .text(function(d) { return d.data.name; })
+      .text(function(d) { return d.data.key; })
 
+console.log(nodeLinks(root2.leaves()))
 
 function mouseovered(d) {
   node
@@ -240,6 +239,7 @@ function packageHierarchy2(nodes) {
 
 // Return a list of imports for the given array of nodes.
 function packageImports(nodes) {
+  console.log(nodes)
   var map = {},
       imports = [];
 
@@ -259,18 +259,7 @@ function packageImports(nodes) {
 }
 
 function nodeLinks(nodes){
-  var map = {},
-      links = [];
-
-  nodes.forEach((d) =>{
-    map[d.data.name] = d;
-    d.children.forEach((c) =>{
-      map[c.data.name] = c
-      links.push(map[d.data.name].path(map[c.data.name]))
-    })
-  })
-
-  return links
+  console.log(nodes)
 }
 
 // packages = {
