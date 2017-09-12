@@ -329,27 +329,27 @@ var link = svg.append("g").selectAll(".link"),
 var root = packageHierarchy(datas)
       .sum(function(d) { return d.size; });
 
-console.log(root)
+// console.log(root)
 
 var root2 = packageHierarchy2(modele.getNodes())
 
-cluster(root, root2);
+// cluster(root);
 
-link = link
-    .data(packageImports(root.leaves()))
-    .enter().append("path")
-      .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
-      .attr("class", "link")
-      .attr("d", line);
-
-  node = node
-    .data(root.leaves())
-    .enter().append("text")
-      .attr("class", "node")
-      .attr("dy", "0.31em")
-      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + 8) + ",0)" + (d.x < 180 ? "" : "rotate(180)"); })
-      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
-      .text(function(d) { return d.data.key; })
+// link = link
+//     .data(packageImports(root.leaves()))
+//     .enter().append("path")
+//       .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
+//       .attr("class", "link")
+//       .attr("d", line);
+//
+//   node = node
+//     .data(root.leaves())
+//     .enter().append("text")
+//       .attr("class", "node")
+//       .attr("dy", "0.31em")
+//       .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + 8) + ",0)" + (d.x < 180 ? "" : "rotate(180)"); })
+//       .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
+//       .text(function(d) { return d.data.key; })
 
 
 function mouseovered(d) {
@@ -397,11 +397,13 @@ function packageHierarchy(classes) {
     find(d.name, d);
   });
 
+  console.log(map)
+
   return d3.hierarchy(map[""]);
 }
 
 // Lazily construct the package hierarchy from class names.
-function packageHierarchy(nodes) {
+function packageHierarchy2(nodes) {
   var map = {};
 
   function find(name, data) {
@@ -417,7 +419,7 @@ function packageHierarchy(nodes) {
     return node;
   }
 
-  classes.forEach(function(d) {
+  nodes.forEach(function(d) {
     find(d.name, d);
   });
 
