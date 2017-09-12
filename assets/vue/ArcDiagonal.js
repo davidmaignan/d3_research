@@ -16,8 +16,7 @@ let configuration = {
   }
 }
 
-const svg  = d3.select("svg")
-        .attr("id", "arc")
+const svg  = d3.select("#arcdiagram-container").select("svg")
         .attr("width", configuration.width)
         .attr("height", configuration.height);
 const color = d3.scaleOrdinal(d3.schemeCategory10);

@@ -118,6 +118,44 @@ class Model {
 
     return this.components.reduce((result, c) => {return result.concat(c.getLinks())}, links)
   }
+
+  getEdgeData(){
+    let datas = {}
+
+    datas = {
+      "name": "root",
+      "children": this.getNodes()
+    }
+
+    return datas
+
+    // return {
+    //   "name": "A1",
+    //   "children": [
+    //     {
+    //       "name": "B1",
+    //       "children": [
+    //         {
+    //           "name": "C1",
+    //           "value": 100
+    //         },
+    //         {
+    //           "name": "C2",
+    //           "value": 300
+    //         },
+    //         {
+    //           "name": "C3",
+    //           "value": 200
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       "name": "B2",
+    //       "value": 200
+    //     }
+    //   ]
+    // };
+  }
 }
 
 Group.prototype.toString = function() {

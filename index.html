@@ -26,13 +26,10 @@
      <div class="collapse navbar-collapse" id="navbarCollapse">
        <ul class="navbar-nav mr-auto">
          <li class="nav-item active">
-           <a class="nav-link" href="#">Arc <span class="sr-only">(current)</span></a>
+           <a id="arcdiagram" class="nav-link" href="#">Arc diagramme <span class="sr-only">(current)</span></a>
          </li>
          <li class="nav-item">
-           <a class="nav-link" href="#">Matrix</a>
-         </li>
-         <li class="nav-item">
-           <a class="nav-link" href="#">Edge Bundling</a>
+           <a id="edgediagram"class="nav-link" href="#">Edge Bundling diagramme</a>
          </li>
        </ul>
        <button class="btn">
@@ -41,11 +38,34 @@
      </div>
    </nav>
    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12">
-          <svg width="960" height="600"></svg>
+     <div class="row diagram-container" id="arcdiagram-container">
+       <div class="col-lg-12">
+         <svg />
+       </div>
+     </div>
+      <div class="row diagram-container" id="edgediagram-container">
+        <div class="col-lg-7">
+          <svg></svg>
         </div>
-      </div>
+        <div class="col-lg-5">
+          <h1>Node title</h1>
+          <div class="alert alert-success" role="alert">
+            <strong>Status</strong> OK
+          </div>
+          <dl class="row">
+            <dt class="col-sm-3">Description</dt>
+            <dd class="col-sm-9">A description list is perfect for defining terms.</dd>
+
+            <dt class="col-sm-3">Parent</dt>
+            <dd class="col-sm-9"><a href="">Header/Footer dynamic contents</a> - <a href="">Itinerary factsheet detail feed</a></dd>
+
+            <dt class="col-sm-3">Enfant</dt>
+            <dd class="col-sm-9"><a href="">SV package booking process</a> - <a href="">TS travel info pages</a> - <a href="">HDV file</a> -  <a href="">Widget Secure fligh</a></dd>
+
+            <dt class="col-sm-3 text-truncate">Truncated term is truncated</dt>
+            <dd class="col-sm-9">Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</dd>
+          </dl>
+        </div>
     </div>
 
     <!-- Modal -->
