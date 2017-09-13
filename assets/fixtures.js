@@ -680,86 +680,1177 @@ var fixtures = {
 }
 
 const schema = {
-	"type": "object",
-    "required": ["sensorsTypes", "components", "groups", "sensors"],
-    "properties": {
-      "sensorsTypes": {"type": "array"},
-    	// "sensorsTypes": {
-      //     	"type": "object",
-      //     	"minProperties": 1,
-      //     	"patternProperties": {
-      //       "^[1-9][0-9]*$": { "type": "string", "minLength": 1 }
-      //       }
-      //   },
-    	"components": {
-        	"type": "array",
-            "items": {
-             	"type": "object",
-                "required": ["id", "name", "sensorsIds", "dependencies"],
-                "properties": {
-                	"id": {"type": "integer", "minimum": 0},
-                    "name": {"type": "string", "minLength": 1},
-                    "sensorsIds": {
-                     	"type": "array",
-                        "uniqueItems": true,
-                        "items": {"type": "integer", "minimum": 0}
-                    },
-                    "dependencies": {
-                     	"type": "array",
-                        "uniqueItems": true,
-                        "items": {"type": "integer", "minimum": 0}
-                    }
-                }
-            }
-        },
-        "groups": {
-        	"type": "array",
-            "items": {
-             	"type": "object",
-                "required": ["groupId", "name", "componentIds", "groupIds"],
-                 "properties": {
-                  	"groupeId": {"type": "integer", "minimum": 0},
-                    "name": {"type": "string", "minLength": 1},
-                    "componentIds": {
-                      "type": "array",
-                      "uniqueItems": true,
-                      "items": {"type": "integer", "minimum": 0}
-                    },
-                    "groupIds": {
-                     	"type": "array",
-                        "uniqueItems": true,
-                        "items": {"type":"integer", "minimum": 0}
-                    }
-                 }
-            }
-        },
-        "sensors": {
-         	"type": "array",
-            "items": {
-             	"type": "object",
-                "required": ["id", "name", "sensorType", "url", "timeOut"],
-                "properties": {
-                 	"id": {
-                      "type": ["string", "integer"],
-                      "pattern": "^[1-9][0-9]*$",
-                      "minimum": 0
-                    },
-                    "name": {"type": "string", "minLength": 1},
-                    "sensorType": {
-                      "type": ["string", "integer"],
-                   	  "pattern": "^[1-9][0-9]*$"
-                    },
-                    "url": { "type": "string"},
-                    "timeOut": {
-                    	"type": ["string", "integer"],
-                      	"pattern": "^[1-9][0-9]*$",
-                      	"minimum": 0
-                    }
-                }
-            }
+  "type": "object",
+  "required": ["sensorsTypes", "components", "groups", "sensors"],
+  "properties": {
+    "sensorsTypes": {"type": "array"},
+    // "sensorsTypes": {
+    //     	"type": "object",
+    //     	"minProperties": 1,
+    //     	"patternProperties": {
+    //       "^[1-9][0-9]*$": { "type": "string", "minLength": 1 }
+    //       }
+    //   },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "sensorsIds", "dependencies"],
+        "properties": {
+          "id": {"type": "integer", "minimum": 0},
+          "name": {"type": "string", "minLength": 1},
+          "sensorsIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "integer", "minimum": 0}
+          },
+          "dependencies": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "integer", "minimum": 0}
+          }
         }
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["groupId", "name", "componentIds", "groupIds"],
+        "properties": {
+          "groupeId": {"type": "integer", "minimum": 0},
+          "name": {"type": "string", "minLength": 1},
+          "componentIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "integer", "minimum": 0}
+          },
+          "groupIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type":"integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "sensors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "sensorType", "url", "timeOut"],
+        "properties": {
+          "id": {
+            "type": ["string", "integer"],
+            "pattern": "^[1-9][0-9]*$",
+            "minimum": 0
+          },
+          "name": {"type": "string", "minLength": 1},
+          "sensorType": {
+            "type": ["string", "integer"],
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "url": { "type": "string"},
+          "timeOut": {
+            "type": ["string", "integer"],
+            "pattern": "^[1-9][0-9]*$",
+            "minimum": 0
+          }
+        }
+      }
     }
+  }
 }
 
+const fetchData = {
+  isSuccess: true,
+  errors: [ ],
+  content: {
+    components: [
+      {
+        id: "0",
+        name: "TSPrimaryData feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "1",
+        name: "FSPrimaryData feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "2",
+        name: "Flight routes feed",
+        sensorIds: null,
+        dependencies: [
+          17
+        ],
+        status: "up"
+      },
+      {
+        id: "3",
+        name: "Flight calendar feed",
+        sensorIds: null,
+        dependencies: [
+          16,
+          18
+        ],
+        status: "up"
+      },
+      {
+        id: "4",
+        name: "Campaign Builder feed",
+        sensorIds: null,
+        dependencies: [
+          17,
+          18,
+          19,
+          20
+        ],
+        status: "up"
+      },
+      {
+        id: "5",
+        name: "Best prices feed",
+        sensorIds: null,
+        dependencies: [
+          19,
+          20
+        ],
+        status: "up"
+      },
+      {
+        id: "6",
+        name: "Seat selection feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "7",
+        name: "Geolocation feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "8",
+        name: "Hotel factsheet detail feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "9",
+        name: "Hotel factsheet list feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "10",
+        name: "Hotel factsheet summary feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "11",
+        name: "Itinerary factsheet detail feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "12",
+        name: "Itinerary factsheet list feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "13",
+        name: "Itinerary factsheet product feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "14",
+        name: "Eco fare marketing content feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "15",
+        name: "DTX PA Marketing content feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "16",
+        name: "HDV file",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "17",
+        name: "Flight route Radixx table import",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "18",
+        name: "Flight calendar Radixx table import",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "19",
+        name: "PPPpJ Radixx table import",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "20",
+        name: "PPPpM Radixx table import",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "21",
+        name: "TDP flight booking process",
+        sensorIds: null,
+        dependencies: [
+          67
+        ],
+        status: "up"
+      },
+      {
+        id: "22",
+        name: "TDP seat selection to come",
+        sensorIds: null,
+        dependencies: [
+          15
+        ],
+        status: "up"
+      },
+      {
+        id: "23",
+        name: "BE seat selection standalone",
+        sensorIds: null,
+        dependencies: [
+          6
+        ],
+        status: "up"
+      },
+      {
+        id: "24",
+        name: "SV flight booking process",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "25",
+        name: "SV package booking process",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "26",
+        name: "TS home page",
+        sensorIds: null,
+        dependencies: [
+          42,
+          51,
+          58,
+          64,
+          65
+        ],
+        status: "up"
+      },
+      {
+        id: "27",
+        name: "TS deals pages",
+        sensorIds: null,
+        dependencies: [
+          42,
+          51,
+          58,
+          62,
+          64,
+          65
+        ],
+        status: "up"
+      },
+      {
+        id: "28",
+        name: "TS cheap flights pages",
+        sensorIds: null,
+        dependencies: [
+          42,
+          44,
+          51,
+          58,
+          62,
+          64,
+          65
+        ],
+        status: "up"
+      },
+      {
+        id: "29",
+        name: "TS destination pages",
+        sensorIds: null,
+        dependencies: [
+          42,
+          68
+        ],
+        status: "up"
+      },
+      {
+        id: "30",
+        name: "TS travel info pages",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "31",
+        name: "TS seat selection page",
+        sensorIds: null,
+        dependencies: [
+          42,
+          23
+        ],
+        status: "up"
+      },
+      {
+        id: "32",
+        name: "TS family and friends pages",
+        sensorIds: null,
+        dependencies: [
+          42,
+          60,
+          61
+        ],
+        status: "up"
+      },
+      {
+        id: "33",
+        name: "TS web checkin page",
+        sensorIds: null,
+        dependencies: [
+          42,
+          66
+        ],
+        status: "up"
+      },
+      {
+        id: "34",
+        name: "TS flight status page",
+        sensorIds: null,
+        dependencies: [
+          42,
+          47
+        ],
+        status: "up"
+      },
+      {
+        id: "35",
+        name: "TS flight calendar page",
+        sensorIds: null,
+        dependencies: [
+          42,
+          46
+        ],
+        status: "up"
+      },
+      {
+        id: "36",
+        name: "TS group quote pages",
+        sensorIds: null,
+        dependencies: [
+          52,
+          53,
+          54,
+          55
+        ],
+        status: "up"
+      },
+      {
+        id: "37",
+        name: "TS my booking page",
+        sensorIds: null,
+        dependencies: [
+          42,
+          61
+        ],
+        status: "up"
+      },
+      {
+        id: "38",
+        name: "TS kids club pages",
+        sensorIds: null,
+        dependencies: [
+          42,
+          56,
+          57
+        ],
+        status: "up"
+      },
+      {
+        id: "39",
+        name: "TS secure flight page",
+        sensorIds: null,
+        dependencies: [
+          42,
+          94
+        ],
+        status: "up"
+      },
+      {
+        id: "40",
+        name: "TS newsletter page",
+        sensorIds: null,
+        dependencies: [
+          42,
+          69
+        ],
+        status: "up"
+      },
+      {
+        id: "41",
+        name: "TS DO pages",
+        sensorIds: null,
+        dependencies: [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        status: "up"
+      },
+      {
+        id: "42",
+        name: "Component Header/Footer",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "43",
+        name: "Component Alerts",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "44",
+        name: "Widget Best price histogram TS",
+        sensorIds: null,
+        dependencies: [
+          0,
+          5
+        ],
+        status: "up"
+      },
+      {
+        id: "45",
+        name: "Widget Best price histogram TO",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "46",
+        name: "Widget CDV",
+        sensorIds: null,
+        dependencies: [
+          0,
+          3,
+          7
+        ],
+        status: "up"
+      },
+      {
+        id: "47",
+        name: "Widget SDV",
+        sensorIds: null,
+        dependencies: [
+          0,
+          7
+        ],
+        status: "up"
+      },
+      {
+        id: "48",
+        name: "Widget Destination stats",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "49",
+        name: "Widget Eco Fares",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "50",
+        name: "Widget Edoc",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "51",
+        name: "Widget Flight deals",
+        sensorIds: null,
+        dependencies: [
+          0,
+          4,
+          7,
+          67
+        ],
+        status: "up"
+      },
+      {
+        id: "52",
+        name: "Widget Group Quote - Information",
+        sensorIds: null,
+        dependencies: [
+          97
+        ],
+        status: "up"
+      },
+      {
+        id: "53",
+        name: "Widget Group Quote - Option",
+        sensorIds: null,
+        dependencies: [
+          0,
+          7,
+          97
+        ],
+        status: "up"
+      },
+      {
+        id: "54",
+        name: "Widget Group Quote - Review",
+        sensorIds: null,
+        dependencies: [
+          97
+        ],
+        status: "up"
+      },
+      {
+        id: "55",
+        name: "Widget Group Quote - Progress tracker",
+        sensorIds: null,
+        dependencies: [
+          97
+        ],
+        status: "up"
+      },
+      {
+        id: "56",
+        name: "Widget Kids club - Subscription",
+        sensorIds: null,
+        dependencies: [
+          98
+        ],
+        status: "up"
+      },
+      {
+        id: "57",
+        name: "Widget Kids club - Unsubscription",
+        sensorIds: null,
+        dependencies: [
+          98
+        ],
+        status: "up"
+      },
+      {
+        id: "58",
+        name: "Widget Links rows",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "59",
+        name: "Widget Family and Friends - Login",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "60",
+        name: "Widget Family and Friends - Send invitation",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "61",
+        name: "Widget My booking",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "62",
+        name: "Widget Related destinations",
+        sensorIds: null,
+        dependencies: [
+          0
+        ],
+        status: "up"
+      },
+      {
+        id: "63",
+        name: "Widget Rich content",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "94",
+        name: "Widget Secure flight",
+        sensorIds: null,
+        dependencies: [
+          95
+        ],
+        status: "up"
+      },
+      {
+        id: "64",
+        name: "Widget Showbox",
+        sensorIds: null,
+        dependencies: [
+          4,
+          5,
+          7,
+          67
+        ],
+        status: "up"
+      },
+      {
+        id: "65",
+        name: "Widget Stratos booking engine",
+        sensorIds: null,
+        dependencies: [
+          0,
+          7
+        ],
+        status: "up"
+      },
+      {
+        id: "66",
+        name: "Widget WebCheckin",
+        sensorIds: null,
+        dependencies: [
+          96
+        ],
+        status: "up"
+      },
+      {
+        id: "67",
+        name: "Component Traveler selector",
+        sensorIds: null,
+        dependencies: [
+          84
+        ],
+        status: "up"
+      },
+      {
+        id: "68",
+        name: "Component Media zone",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "69",
+        name: "Widget Newsletter",
+        sensorIds: null,
+        dependencies: [
+          99
+        ],
+        status: "up"
+      },
+      {
+        id: "70",
+        name: "Widget External Newsletter",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "71",
+        name: "Widget External Edoc",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "72",
+        name: "Widget External Stratos booking engine for Canoe",
+        sensorIds: null,
+        dependencies: [
+          0,
+          2,
+          7
+        ],
+        status: "up"
+      },
+      {
+        id: "73",
+        name: "Widget External Stratos booking engine for TDP",
+        sensorIds: null,
+        dependencies: [
+          0,
+          2,
+          7
+        ],
+        status: "up"
+      },
+      {
+        id: "74",
+        name: "Widget External Stratos booking engine for Destination",
+        sensorIds: null,
+        dependencies: [
+          2,
+          7
+        ],
+        status: "up"
+      },
+      {
+        id: "93",
+        name: "Widget External Stratos booking engine for TO Portal",
+        sensorIds: null,
+        dependencies: [
+          2,
+          7
+        ],
+        status: "up"
+      },
+      {
+        id: "75",
+        name: "Mobile App destination timeline feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "76",
+        name: "Mobile App hotel timeline feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "77",
+        name: "Mobile App destinations menu feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "78",
+        name: "Mobile App page contact us feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "79",
+        name: "Mobile App airport list feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "80",
+        name: "TO Portal extraction feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "81",
+        name: "TO Portal flight engine feeds",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "82",
+        name: "TDP dynamic contents",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "83",
+        name: "SV dynamic contents",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "84",
+        name: "Flight search feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "85",
+        name: "Alerts feed",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "86",
+        name: "Site externe Canoe",
+        sensorIds: null,
+        dependencies: [
+          72,
+          90
+        ],
+        status: "up"
+      },
+      {
+        id: "87",
+        name: "Site externe Marlin travel",
+        sensorIds: null,
+        dependencies: [
+          90,
+          70
+        ],
+        status: "up"
+      },
+      {
+        id: "88",
+        name: "Site externe Kayak",
+        sensorIds: null,
+        dependencies: [
+          84
+        ],
+        status: "up"
+      },
+      {
+        id: "89",
+        name: "Site externe Cartrawler",
+        sensorIds: null,
+        dependencies: [
+          90
+        ],
+        status: "up"
+      },
+      {
+        id: "90",
+        name: "Header/Footer dynamic contents",
+        sensorIds: null,
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "91",
+        name: "Mobile App",
+        sensorIds: null,
+        dependencies: [
+          75,
+          76,
+          77,
+          78,
+          79
+        ],
+        status: "up"
+      },
+      {
+        id: "92",
+        name: "TO Portal",
+        sensorIds: [ ],
+        dependencies: [
+          80,
+          81,
+          84,
+          93
+        ],
+        status: "up"
+      },
+      {
+        id: "95",
+        name: "BE Secure Flight service",
+        sensorIds: [ ],
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "96",
+        name: "BE WebCheckin service",
+        sensorIds: [ ],
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "97",
+        name: "BE Group quote service",
+        sensorIds: [ ],
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "98",
+        name: "BE Kids Club service",
+        sensorIds: [ ],
+        dependencies: [ ],
+        status: "up"
+      },
+      {
+        id: "99",
+        name: "BE Adobe campaign service",
+        sensorIds: [ ],
+        dependencies: [ ],
+        status: "up"
+      }
+    ],
+    groups: [
+      {
+        groupId: "1",
+        name: "TS.WCM",
+        componentIds: [ ],
+        groupIds: [
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      {
+        groupId: "2",
+        name: "TS.API",
+        componentIds: [ ],
+        groupIds: [
+          9,
+          10
+        ]
+      },
+      {
+        groupId: "3",
+        name: "Datalex",
+        componentIds: [
+          21,
+          22
+        ],
+        groupIds: [ ]
+      },
+      {
+        groupId: "4",
+        name: "Soft Voyage",
+        componentIds: [
+          24,
+          25
+        ],
+        groupIds: [ ]
+      },
+      {
+        groupId: "6",
+        name: "Backend",
+        componentIds: [
+          16,
+          23,
+          95,
+          96,
+          97,
+          98,
+          99
+        ],
+        groupIds: [ ]
+      },
+      {
+        groupId: "7",
+        name: "Radixx DB",
+        componentIds: [
+          17,
+          18,
+          19,
+          20
+        ],
+        groupIds: [ ]
+      },
+      {
+        groupId: "9",
+        name: "External Web sites",
+        componentIds: [
+          86,
+          87,
+          88,
+          89
+        ],
+        groupIds: [ ]
+      },
+      {
+        groupId: "10",
+        name: "TS API Flight",
+        componentIds: [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          14,
+          15
+        ],
+        groupIds: [ ]
+      },
+      {
+        groupId: "11",
+        name: "TS API TO",
+        componentIds: [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        groupIds: [ ]
+      },
+      {
+        groupId: "12",
+        name: "TS components",
+        componentIds: [
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69
+        ],
+        groupIds: [ ]
+      },
+      {
+        groupId: "13",
+        name: "TS external widgets",
+        componentIds: [
+          70,
+          71,
+          72,
+          73,
+          74
+        ],
+        groupIds: [ ]
+      },
+      {
+        groupId: "14",
+        name: "TS services pages",
+        componentIds: [
+          30,
+          33,
+          34,
+          35,
+          37,
+          39
+        ],
+        groupIds: [ ]
+      },
+      {
+        groupId: "15",
+        name: "TS sale pages",
+        componentIds: [
+          26,
+          27,
+          28,
+          29,
+          31,
+          32,
+          36,
+          38,
+          40,
+          41
+        ],
+        groupIds: [ ]
+      },
+      {
+        groupId: "17",
+        name: "TS WCM feeds",
+        componentIds: [
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          90
+        ],
+        groupIds: [ ]
+      }
+    ],
+    sensors: [
+      {
+        id: "4316",
+        name: "getAirports",
+        sensorType: "1",
+        statusMessage: "OK"
+      },
+      {
+        id: "4133",
+        name: "airTransat",
+        sensorType: "httpWebFullPage",
+        statusMessage: "OK"
+      }
+    ]
+  }
+}
 
-export { schema, fixtures, datas };
+export { schema, fixtures, datas, fetchData };

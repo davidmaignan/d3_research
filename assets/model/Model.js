@@ -2,15 +2,18 @@
 import {Enum} from 'enumify'
 
 let Set = require("collections/set")
+let Map = require("collections/map");
 
 class Group {
-  constructor(id, name, compnenentIds, groupIds){
+  constructor(id, name, componenentIds, groupIds){
     this.id = id
     this.name = name
-    this.compnenentIds = compnenentIds
+    this.compnenentIds = componenentIds
     this.groupIds = groupIds
     this.components = new Set()
+    this.componentMap = new Map()
     this.groups = new Set()
+    this.groupMap = new Map()
     this.topLevel = true
   }
 
@@ -29,6 +32,7 @@ class Group {
     })
   }
   addComponent(component){
+    this.componentMap.set(component.name, component)
     this.components.add(component)
   }
   addGroups(groupList){
@@ -37,6 +41,7 @@ class Group {
     })
   }
   addGroup(group){
+    this.groupMap.set(group.name, group)
     this.groups.add(group)
   }
   setTopLevel(bool){
@@ -54,9 +59,11 @@ class Group {
   getLinks(){
     let links = this.groups.map((g) => {return this.linked(g)})
 
-    this.components.reduce((ar, c) => {ar.push(this.linked(c)); return ar}, links)
+    let linksMap = this.groupMap.map(g =>  {return this.linked(g)})
 
-    return links
+    this.componentMap.reduce((ar, c) => {ar.push(this.linked(c)); return ar}, linksMap)
+
+    return linksMap
   }
 }
 
@@ -66,6 +73,7 @@ class Component {
     this.name = name
     this.dependenciesIds = dependenciesIds
     this.dependencies = new Set()
+    this.dependenciesMap = new Map()
   }
   getId(){
     return this.id
@@ -79,6 +87,7 @@ class Component {
     })
   }
   addDependency(component){
+    this.dependenciesMap.set(component.name, component)
     this.dependencies.add(component)
   }
   printDependencies(){
@@ -88,7 +97,7 @@ class Component {
     return {'source': this, 'target': target}
   }
   getLinks(){
-    return this.dependencies.reduce((ar, g) => {ar.push(this.linked(g)); return ar}, [])
+    return this.dependenciesMap.reduce((ar, g) => {ar.push(this.linked(g)); return ar}, [])
   }
 }
 
@@ -120,42 +129,42 @@ class Model {
   }
 
   getEdgeData(){
-    let datas = {}
-
-    datas = {
+    return {
       "name": "root",
       "children": this.getNodes()
     }
-
-    return datas
-
-    // return {
-    //   "name": "A1",
-    //   "children": [
-    //     {
-    //       "name": "B1",
-    //       "children": [
-    //         {
-    //           "name": "C1",
-    //           "value": 100
-    //         },
-    //         {
-    //           "name": "C2",
-    //           "value": 300
-    //         },
-    //         {
-    //           "name": "C3",
-    //           "value": 200
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       "name": "B2",
-    //       "value": 200
-    //     }
-    //   ]
-    // };
   }
+
+  update(updatedData){
+    console.log(this.components.length)
+
+    updatedData.content.components.forEach(d => {
+
+
+
+      // let component = this.getComponent(d.name)
+      //
+      // component.status = d.status
+      // component.name = d.name
+      //
+      // console.log(component)
+      //
+      // component.dependenciesIds.filter(d => d.dependencies.indexOf(x) == -1);
+      //
+      // console.log(d.dependencies)
+    })
+  }
+
+  getComponent(d){
+    return this.components.get(d.name) || this.createComponent(d)
+  }
+
+  createComponent(d){
+    this.components.set(d.name, new Component(d.id, d.name, d.dependencies))
+    return this.components.get(d.name)
+  }
+
+
 }
 
 Group.prototype.toString = function() {
@@ -163,11 +172,12 @@ Group.prototype.toString = function() {
 }
 
 var replaceAll = function() {
-  return this.name.replace(/[ .]/g, "-")
+  return this.name.replace(/[ .-]/g, "-")
 }
 
 Group.prototype.getClassName = replaceAll
 Component.prototype.getClassName = replaceAll
+Sensor.prototype.getClassName = replaceAll
 
 class SensorType extends Enum {}
 

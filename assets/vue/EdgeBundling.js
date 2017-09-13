@@ -8,7 +8,7 @@ d3.selection.prototype.styles = selection_styles
 
 const diameter = 1300,
     radius = diameter / 2,
-    innerRadius = radius - 220;
+    innerRadius = radius - 320;
 const cluster = d3.cluster()
     .size([360, innerRadius]);
 const line = d3.radialLine()

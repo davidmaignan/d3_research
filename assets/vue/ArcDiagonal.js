@@ -132,4 +132,10 @@ var initArc = () => {
    })
 }
 
-export { initArc }
+var updateArc = (updatedData) => {
+  console.log(updatedData)
+  modele.update(updatedData)
+}
+
+
+export { initArc, updateArc }
