@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import selection_attrs from "../../node_modules/d3-selection-multi/src/selection/attrs";
 import selection_styles from "../../node_modules/d3-selection-multi/src/selection/styles";
-import { modele } from '../services/DataService.js'
 
 d3.selection.prototype.attrs = selection_attrs
 d3.selection.prototype.styles = selection_styles
@@ -16,19 +15,12 @@ const line = d3.radialLine()
     .radius(function(d) { return d.y; })
     .angle(function(d) { return d.x / 180 * Math.PI; })
 
-let root = d3.hierarchy(modele.getEdgeData()).sum(function(d) { return d.size; });
-
-cluster(root)
-
-let svg2 = d3.select("#edgediagram-container").select("svg")
+let svg = d3.select("#edgediagram-container").select("svg")
     .attr("width", diameter)
     .attr("height", diameter)
     .append("g")
     .attr("transform", "translate(" + radius + "," + radius + ")");
-let link = svg2.selectAll(".link"),
-    node = svg2.selectAll(".node"),
-    mapLinks = {},
-    linkEdge = []
+let link, node, mapLinks, linkEdge
 
 let mouseover = (d) => {
   node.each((n) => {n.target = n.source = false;})
@@ -39,8 +31,15 @@ let mouseover = (d) => {
   node.classed("hover-child", function(n) { return n.target; })
       .classed("hover-parent", function(n) { return n.source; });
 }
+let initEdge = (modele) => {
+  link = svg.selectAll(".link"),
+      node = svg.selectAll(".node"),
+      mapLinks = {},
+      linkEdge = []
+      
+  let root = d3.hierarchy(modele.getEdgeData()).sum(function(d) { return d.size; });
+  cluster(root)
 
-var initEdge = () => {
   node = node.data(root.descendants())
     .enter().append("text")
     .attr("class", "node")
@@ -58,10 +57,14 @@ var initEdge = () => {
   link = link.data(linkEdge)
       .enter().append("path")
         .each(function(d) {
-          console.log("test")
            d.source = d[0], d.target = d[d.length - 1]; })
         .attr("class", "link")
         .attr("d", line);
 }
-
-export { initEdge }
+let resetEdge = () => {
+  svg.selectAll("*").remove();
+}
+let updateEdge = (modele) => {
+  initEdge(modele)
+}
+export { initEdge, resetEdge, updateEdge }

@@ -10,13 +10,10 @@ class Group {
     this.name = name
     this.compnenentIds = componenentIds
     this.groupIds = groupIds
-    this.components = new Set()
     this.componentMap = new Map()
-    this.groups = new Set()
     this.groupMap = new Map()
     this.topLevel = true
   }
-
   getGroupIds(){
     return this.groupIds
   }
@@ -33,7 +30,6 @@ class Group {
   }
   addComponent(component){
     this.componentMap.set(component.name, component)
-    this.components.add(component)
   }
   addGroups(groupList){
     groupList.forEach((g) =>{
@@ -41,8 +37,7 @@ class Group {
     })
   }
   addGroup(group){
-    this.groupMap.set(group.name, group)
-    this.groups.add(group)
+    this.groupMap.set(group.id, group)
   }
   setTopLevel(bool){
     this.topLevel = bool
@@ -51,14 +46,12 @@ class Group {
     return this.topLevel
   }
   printDependencies(){
-    return this.components.map((d) => {return d.name}).join("<br>")
+    return this.componentMap.map((d) => {return d.name}).join("<br>")
   }
   linked(target){
     return {'source': this, 'target': target}
   }
   getLinks(){
-    let links = this.groups.map((g) => {return this.linked(g)})
-
     let linksMap = this.groupMap.map(g =>  {return this.linked(g)})
 
     this.componentMap.reduce((ar, c) => {ar.push(this.linked(c)); return ar}, linksMap)
@@ -72,7 +65,6 @@ class Component {
     this.id = id
     this.name = name
     this.dependenciesIds = dependenciesIds
-    this.dependencies = new Set()
     this.dependenciesMap = new Map()
   }
   getId(){
@@ -87,11 +79,10 @@ class Component {
     })
   }
   addDependency(component){
-    this.dependenciesMap.set(component.name, component)
-    this.dependencies.add(component)
+    this.dependenciesMap.set(component.id, component)
   }
   printDependencies(){
-    return this.dependencies.map((d) => {return d.name}).join("<br>")
+    return this.dependenciesMap.map((d) => {return d.name}).join("<br>")
   }
   linked(target){
     return {'source': this, 'target': target}
@@ -116,55 +107,79 @@ class Model {
     this.groups = groups
     this.components = components
     this.sensors = sensors
+    this.hasNewNode = false
   }
-
   getNodes(){
     return this.groups.toArray().concat(this.components.toArray())
   }
-
   getLinks(){
     let links = this.groups.reduce((result, g) => {return result.concat(g.getLinks())}, [])
 
     return this.components.reduce((result, c) => {return result.concat(c.getLinks())}, links)
   }
-
   getEdgeData(){
     return {
       "name": "root",
       "children": this.getNodes()
     }
   }
-
   update(updatedData){
-    console.log(this.components.length)
-
+    this.hasNewNode = false
+    //Update components
     updatedData.content.components.forEach(d => {
+      let component = this.getComponent(d)
 
+      component.name = d.name
+      component.dependenciesIds = d.dependencies
+      let dependencies = d.dependencies.reduce((r, c) => {
+        let cmp = this.getComponent({id: c})
+        r.set(c, cmp);
+        return r
+      }, new Map())
 
+      component.dependenciesMap = dependencies
+    })
 
-      // let component = this.getComponent(d.name)
-      //
-      // component.status = d.status
-      // component.name = d.name
-      //
-      // console.log(component)
-      //
-      // component.dependenciesIds.filter(d => d.dependencies.indexOf(x) == -1);
-      //
-      // console.log(d.dependencies)
+    //update groups
+    updatedData.content.groups.forEach(d => {
+      let group = this.getGroup(d)
+
+      group.name = d.name
+      group.groupIds = d.groupIds
+      group.componentIds = d.componentIds
+      group.componentMap = d.componentIds.reduce((r, c) => {
+        let cmp = this.getComponent({id: c})
+        r.set(c, cmp);
+        return r
+      }, new Map())
+
+      //@todo refactor c# to return an array[{id: xx}, {id: yy}]
+      //@todo refactor c#: get rid of groupId use id instead!
+      group.groups = d.groupIds.reduce((r, c) => {
+        let grp = this.getGroup({groupId: c})
+        r.set(c, grp);
+        return r
+      }, new Map())
     })
   }
-
+  getGroup(d) {
+    return this.groups.get(d.groupId) || this.createGroup(d)
+  }
+  createGroup(d){
+    this.hasNewNode = true
+    let newGroup = new Group(d.groupId, d.name, d.componenentIds, d.groupIds)
+    this.groups.set(d.groupId, newGroup)
+    return newGroup
+  }
   getComponent(d){
-    return this.components.get(d.name) || this.createComponent(d)
+    return this.components.get(d.id) || this.createComponent(d)
   }
-
   createComponent(d){
-    this.components.set(d.name, new Component(d.id, d.name, d.dependencies))
-    return this.components.get(d.name)
+    this.hasNewNode = true
+    let newComponent = new Component(d.id, d.name, d.dependencies)
+    this.components.set(d.id, newComponent)
+    return newComponent
   }
-
-
 }
 
 Group.prototype.toString = function() {

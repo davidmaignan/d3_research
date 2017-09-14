@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import selection_attrs from "../../node_modules/d3-selection-multi/src/selection/attrs";
 import selection_styles from "../../node_modules/d3-selection-multi/src/selection/styles";
-import { modele } from '../services/DataService.js'
 
 d3.selection.prototype.attrs = selection_attrs
 d3.selection.prototype.styles = selection_styles
@@ -11,8 +10,9 @@ let configuration = {
   "height": 2000,
   "node":{
     "x": 0,
+    "cx": 18,
     "y": 160,
-    "radius": 6
+    "radius": 5
   }
 }
 
@@ -21,7 +21,11 @@ const svg  = d3.select("#arcdiagram-container").select("svg")
         .attr("height", configuration.height);
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-let link, node, text
+let radians = d3.scaleLinear().range([Math.PI / 2, 3 * Math.PI / 2]),
+    arc = d3.lineRadial().angle(function(d) { return radians(d); }),
+    linkContainer = svg.append("g"),
+    nodeContainer = svg.append("g"),
+    textContainer = svg.append("g")
 
 const popover = d3.select("body")
        	.append("div")
@@ -31,9 +35,12 @@ const popover = d3.select("body")
        	.style("visibility", "hidden")
         .style("max-width", "450px")
 const mouseover = (d) => {
-  popover.style("visibility", "visible")
+  let node = nodeContainer.selectAll("circle")
+  let text = textContainer.selectAll("text")
+  let link = linkContainer.selectAll("path")
   let nodeOvered = node.filter((l) => {return l === d})
 
+  popover.style("visibility", "visible")
   popover.style("left", `${nodeOvered.attr("cx")}px`)
   popover.style("top", "300px")
   popover.html(popInfo(d))
@@ -69,25 +76,27 @@ const popInfo = (d) => {
   return html + '</ul>'
 }
 
-var initArc = () => {
-  link = svg.append("g").selectAll(".link")
-  node = svg.append("g").selectAll(".node")
-  text = svg.append("g").selectAll(".text")
+let initArc = (modele) => {
+  let node = nodeContainer.selectAll("circle")
+    .data(modele.getNodes());
 
-  node = node.data(modele.getNodes())
-         .enter()
-         .append("circle")
-         .attr("class", (node) => {
-           return `node ${node.getClassName()} ${node.constructor}`
-          })
-         .attr("id", function(d, i) { return d.name; })
-         .attr("cx", function(d, i) { return i * 20 })
-         .attr("cy", function(d, i) { return configuration.node.y; })
-         .attr("r",  function(d, i) { return configuration.node.radius; })
-         .on("mouseover", mouseover)
-         .on('mouseout', mouseout)
-  text = text.data(modele.getNodes())
-   .enter()
+  node.enter()
+     .append("circle")
+     .attr("class", (node) => {
+       return `node ${node.getClassName()} ${node.constructor}`
+      })
+     .attr("id", function(d, i) { return d.name; })
+     .attr("cx", function(d, i) { return i * configuration.node.cx })
+     .attr("cy", function(d, i) { return configuration.node.y; })
+     .attr("r",  function(d, i) { return configuration.node.radius; })
+     .on("mouseover", mouseover)
+     .on('mouseout', mouseout)
+     .merge(node)
+
+   node.exit().remove();
+
+  let text = textContainer.selectAll("text").data(modele.getNodes())
+  text.enter()
    .append("text")
    .attrs({
      "id": (node) => {return `${node.getClassName()}-text`},
@@ -96,30 +105,31 @@ var initArc = () => {
       },
      "transform": "rotate(-90 80 6.5)",
      "x": "-60",
-     "y": (d, i) => {return i * 20 - 70}, //@todo parameterize values
+     "y": (d, i) => {return i * configuration.node.cx - 70}, //@todo parameterize values
    })
    .text(node => {
      return node.name
    })
    .on("mouseover", mouseover)
    .on('mouseout', mouseout)
+   .merge(text)
 
+   text.exit().remove();
 
-  let radians = d3.scaleLinear().range([Math.PI / 2, 3 * Math.PI / 2]);
-  let arc = d3.lineRadial().angle(function(d) { return radians(d); });
-  link = link.data(modele.getLinks())
-   .enter()
+  let link = linkContainer.selectAll("path").data(modele.getLinks())
+  link.enter()
    .append("path")
    .attr("class", (link) => {
+     console.log(link)
      return `link ${link.source.getClassName()}-source ${link.target.getClassName()}-target`
     })
    .attr("transform", function(d, i) {
-       d.source.x = parseInt(d3.select(`circle[id='${d.source.name}']`).attr("cx"))
-       d.target.x = parseInt(d3.select(`circle[id='${d.target.name}']`).attr("cx"))
+      d.source.x = parseInt(d3.select(`circle[id='${d.source.name}']`).attr("cx"))
+      d.target.x = parseInt(d3.select(`circle[id='${d.target.name}']`).attr("cx"))
 
-       var xshift = d.source.x + (d.target.x - d.source.x) / 2;
-       var yshift = 160;
-       return "translate(" + xshift + ", " + yshift + ")";
+      var xshift = d.source.x + (d.target.x - d.source.x) / 2;
+      var yshift = 160;
+      return "translate(" + xshift + ", " + yshift + ")";
    })
    .attr("d", function(d, i) {
        var xdist = Math.abs(d.source.x - d.target.x);
@@ -130,12 +140,55 @@ var initArc = () => {
 
        return arc(points);
    })
+   .merge(link)
+
+   link.exit().remove();
 }
 
-var updateArc = (updatedData) => {
-  console.log(updatedData)
-  modele.update(updatedData)
-}
+let updateArc = (modele) => {
+  let node = nodeContainer.selectAll("circle")
+    .data(modele.getNodes());
 
+  node.enter()
+     .append("circle")
+     .attr("class", (node) => {
+       return `node ${node.getClassName()} ${node.constructor}`
+      })
+     .attr("id", function(d, i) { return d.name; })
+     .attr("cx", function(d, i) { return i * configuration.node.cx })
+     .attr("cy", function(d, i) { return configuration.node.y; })
+     .attr("r",  function(d, i) { return configuration.node.radius; })
+     .on("mouseover", mouseover)
+     .on('mouseout', mouseout)
+     .merge(node)
+
+   node.exit().remove();
+
+   let text = textContainer.selectAll("text").data(modele.getNodes())
+   text.enter()
+    .append("text")
+    .attrs({
+      "id": (node) => {return `${node.getClassName()}-text`},
+      "class": (node) => {
+        return `text ${node.getClassName()}`
+       },
+      "transform": "rotate(-90 80 6.5)",
+      "x": "-60",
+      "y": (d, i) => {return i * configuration.node.cx - 70}, //@todo parameterize values
+    })
+    .text(node => {
+      return node.name
+    })
+    .on("mouseover", mouseover)
+    .on('mouseout', mouseout)
+    .merge(text)
+
+    text.exit().remove();
+
+    let link = linkContainer.selectAll("path").data(modele.getLinks())
+    link.enter()
+
+
+}
 
 export { initArc, updateArc }

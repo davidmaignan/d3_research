@@ -33,6 +33,10 @@ text{
   fill: #F39C12;
 }
 
+.update {
+  fill: green;
+}
+
 .link {
   fill: none;
   stroke: #666;

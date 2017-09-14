@@ -1,4 +1,4 @@
-var fixtures = {
+const fixtures = {
   "sensorsTypes":
   ["", "http" ,"httpWebFullPage","json"],
   "components": [
@@ -576,85 +576,85 @@ var fixtures = {
 
   "groups": [
     {
-      "groupId": 1,
+      "id": 1,
       "name": "TS.WCM",
       "componentIds": [ ],
       "groupIds": [ 11, 12, 13, 14, 15 ]
     },
     {
-      "groupId": 2,
+      "id": 2,
       "name": "TS.API",
       "componentIds": [ ],
       "groupIds": []
     },
     {
-      "groupId": 3,
+      "id": 3,
       "name": "Datalex",
       "componentIds": [ 21, 22 ],
       "groupIds": [ ]
     },
     {
-      "groupId": 4,
+      "id": 4,
       "name": "Soft Voyage",
       "componentIds": [ 24, 25 ],
       "groupIds": [ ]
     },
     {
-      "groupId": 6,
+      "id": 6,
       "name": "Backend",
       "componentIds": [ 16, 23 ],
       "groupIds": [ ]
     },
     {
-      "groupId": 7,
+      "id": 7,
       "name": "Radixx DB",
       "componentIds": [ 17, 18, 19, 20 ],
       "groupIds": [ ]
     },
     {
-      "groupId": 9,
+      "id": 9,
       "name": "External Web sites",
       "componentIds": [ 86, 87, 88, 89 ],
       "groupIds": [ ]
     },
     {
-      "groupId": 10,
+      "id": 10,
       "name": "TS API Flight",
       "componentIds": [ 0, 1, 2, 3, 4, 5, 6, 7, 14, 15 ],
       "groupIds": [ ]
     },
     {
-      "groupId": 11,
+      "id": 11,
       "name": "TS API TO",
       "componentIds": [ 8, 9, 10, 11, 12, 13 ],
       "groupIds": [ ]
     },
     {
-      "groupId": 12,
+      "id": 12,
       "name": "TS components",
       "componentIds": [ 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 ],
       "groupIds": [ ]
     },
     {
-      "groupId": 13,
+      "id": 13,
       "name": "TS external widgets",
       "componentIds": [ 70, 71, 72, 73, 74 ],
       "groupIds": [ ]
     },
     {
-      "groupId": 14,
+      "id": 14,
       "name": "TS services pages",
       "componentIds": [ 30, 33, 34, 35, 37, 39 ],
       "groupIds": [ ]
     },
     {
-      "groupId": 15,
+      "id": 15,
       "name": "TS sale pages",
       "componentIds": [ 26, 27, 28, 29, 31, 32, 36, 38, 40, 41 ],
       "groupIds": [ ]
     },
     {
-      "groupId": 17,
+      "id": 17,
       "name": "TS WCM feeds",
       "componentIds": [ 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 90 ],
       "groupIds": [ ]
@@ -663,14 +663,14 @@ var fixtures = {
 
   "sensors": [
     {
-      "id": "4316",
+      "id": 4316,
       "name": "getAirports",
       "sensorType": "1",
       "url": "http://stg-api.airtransat.com/en-CA/Services/TSPrimaryData/GetAirports",
       "timeOut": "20"
     },
     {
-      "id": "4133",
+      "id": 4133,
       "name": "airTransat",
       "sensorType": "2",
       "url": "https://www.airtransat.com/fr-CA/reserver/reserver-un-vol",
@@ -678,7 +678,6 @@ var fixtures = {
     }
   ]
 }
-
 const schema = {
   "type": "object",
   "required": ["sensorsTypes", "components", "groups", "sensors"],
@@ -716,9 +715,9 @@ const schema = {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["groupId", "name", "componentIds", "groupIds"],
+        "required": ["id", "name", "componentIds", "groupIds"],
         "properties": {
-          "groupeId": {"type": "integer", "minimum": 0},
+          "id": {"type": "integer", "minimum": 0},
           "name": {"type": "string", "minLength": 1},
           "componentIds": {
             "type": "array",
@@ -761,38 +760,99 @@ const schema = {
   }
 }
 
+const schemaFetchdata = {
+	"type": "object",
+	"required": ["isSuccess", "errors", "content"],
+    "properties": {
+		"isSuccess": {"type": "boolean"},
+        "errors": {"type": "array"},
+        "content": {
+          	"type": "object",
+         	"required": ["components", "groups", "sensors"],
+            "properties": {
+             	  "components": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["id", "name", "sensorsIds", "dependencies", "status"],
+                        "properties": {
+                          "id": {"type": "integer", "minimum": 0},
+                          "name": {"type": "string", "minLength": 1},
+                          "sensorsIds": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {"type": "integer", "minimum": 0}
+                          },
+                          "dependencies": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {"type": "integer", "minimum": 0}
+                          },
+                          "status": {
+                           	"type": "string",
+                            "pattern": "(up|down|partial)"
+                          }
+                        }
+                      }
+                    },
+                  "groups": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["id", "name", "componentIds", "groupIds"],
+                        "properties": {
+                          "id": {"type": "integer", "minimum": 0},
+                          "name": {"type": "string", "minLength": 1},
+                          "componentIds": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {"type": "integer", "minimum": 0}
+                          },
+                          "groupIds": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "items": {"type":"integer", "minimum": 0}
+                          }
+                        }
+                      }
+                  },
+
+            }
+        }
+    }
+}
 const fetchData = {
   isSuccess: true,
   errors: [ ],
   content: {
     components: [
       {
-        id: "0",
+        id: 0,
         name: "TSPrimaryData feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "1",
+        id: 1,
         name: "FSPrimaryData feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "2",
+        id: 2,
         name: "Flight routes feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           17
         ],
         status: "up"
       },
       {
-        id: "3",
+        id: 3,
         name: "Flight calendar feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           16,
           18
@@ -800,9 +860,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "4",
+        id: 4,
         name: "Campaign Builder feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           17,
           18,
@@ -812,9 +872,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "5",
+        id: 5,
         name: "Best prices feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           19,
           20
@@ -822,155 +882,155 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "6",
+        id: 6,
         name: "Seat selection feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "7",
+        id: 7,
         name: "Geolocation feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "8",
+        id: 8,
         name: "Hotel factsheet detail feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "9",
+        id: 9,
         name: "Hotel factsheet list feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "10",
+        id: 10,
         name: "Hotel factsheet summary feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "11",
+        id: 11,
         name: "Itinerary factsheet detail feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "12",
+        id: 12,
         name: "Itinerary factsheet list feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "13",
+        id: 13,
         name: "Itinerary factsheet product feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "14",
+        id: 14,
         name: "Eco fare marketing content feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "15",
+        id: 15,
         name: "DTX PA Marketing content feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "16",
+        id: 16,
         name: "HDV file",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "17",
+        id: 17,
         name: "Flight route Radixx table import",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "18",
+        id: 18,
         name: "Flight calendar Radixx table import",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "19",
+        id: 19,
         name: "PPPpJ Radixx table import",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "20",
+        id: 20,
         name: "PPPpM Radixx table import",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "21",
+        id: 21,
         name: "TDP flight booking process",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           67
         ],
         status: "up"
       },
       {
-        id: "22",
+        id: 22,
         name: "TDP seat selection to come",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           15
         ],
         status: "up"
       },
       {
-        id: "23",
+        id: 23,
         name: "BE seat selection standalone",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           6
         ],
         status: "up"
       },
       {
-        id: "24",
+        id: 24,
         name: "SV flight booking process",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "25",
+        id: 25,
         name: "SV package booking process",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "26",
+        id: 26,
         name: "TS home page",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           51,
@@ -981,9 +1041,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "27",
+        id: 27,
         name: "TS deals pages",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           51,
@@ -995,9 +1055,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "28",
+        id: 28,
         name: "TS cheap flights pages",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           44,
@@ -1010,9 +1070,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "29",
+        id: 29,
         name: "TS destination pages",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           68
@@ -1020,16 +1080,16 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "30",
+        id: 30,
         name: "TS travel info pages",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "31",
+        id: 31,
         name: "TS seat selection page",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           23
@@ -1037,9 +1097,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "32",
+        id: 32,
         name: "TS family and friends pages",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           60,
@@ -1048,9 +1108,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "33",
+        id: 33,
         name: "TS web checkin page",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           66
@@ -1058,9 +1118,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "34",
+        id: 34,
         name: "TS flight status page",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           47
@@ -1068,9 +1128,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "35",
+        id: 35,
         name: "TS flight calendar page",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           46
@@ -1078,9 +1138,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "36",
+        id: 36,
         name: "TS group quote pages",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           52,
           53,
@@ -1090,9 +1150,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "37",
+        id: 37,
         name: "TS my booking page",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           61
@@ -1100,9 +1160,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "38",
+        id: 38,
         name: "TS kids club pages",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           56,
@@ -1111,9 +1171,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "39",
+        id: 39,
         name: "TS secure flight page",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           94
@@ -1121,9 +1181,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "40",
+        id: 40,
         name: "TS newsletter page",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           42,
           69
@@ -1131,9 +1191,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "41",
+        id: 41,
         name: "TS DO pages",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           8,
           9,
@@ -1145,23 +1205,23 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "42",
+        id: 42,
         name: "Component Header/Footer",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "43",
+        id: 43,
         name: "Component Alerts",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "44",
+        id: 44,
         name: "Widget Best price histogram TS",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           0,
           5
@@ -1169,16 +1229,16 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "45",
+        id: 45,
         name: "Widget Best price histogram TO",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "46",
+        id: 46,
         name: "Widget CDV",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           0,
           3,
@@ -1187,9 +1247,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "47",
+        id: 47,
         name: "Widget SDV",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           0,
           7
@@ -1197,30 +1257,30 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "48",
+        id: 48,
         name: "Widget Destination stats",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "49",
+        id: 49,
         name: "Widget Eco Fares",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "50",
+        id: 50,
         name: "Widget Edoc",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "51",
+        id: 51,
         name: "Widget Flight deals",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           0,
           4,
@@ -1230,18 +1290,18 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "52",
+        id: 52,
         name: "Widget Group Quote - Information",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           97
         ],
         status: "up"
       },
       {
-        id: "53",
+        id: 53,
         name: "Widget Group Quote - Option",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           0,
           7,
@@ -1250,98 +1310,98 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "54",
+        id: 54,
         name: "Widget Group Quote - Review",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           97
         ],
         status: "up"
       },
       {
-        id: "55",
+        id: 55,
         name: "Widget Group Quote - Progress tracker",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           97
         ],
         status: "up"
       },
       {
-        id: "56",
+        id: 56,
         name: "Widget Kids club - Subscription",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           98
         ],
         status: "up"
       },
       {
-        id: "57",
+        id: 57,
         name: "Widget Kids club - Unsubscription",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           98
         ],
         status: "up"
       },
       {
-        id: "58",
+        id: 58,
         name: "Widget Links rows",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "59",
+        id: 59,
         name: "Widget Family and Friends - Login",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "60",
+        id: 60,
         name: "Widget Family and Friends - Send invitation",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "61",
+        id: 61,
         name: "Widget My booking",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "62",
+        id: 62,
         name: "Widget Related destinations",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           0
         ],
         status: "up"
       },
       {
-        id: "63",
+        id: 63,
         name: "Widget Rich content",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "94",
+        id: 94,
         name: "Widget Secure flight",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           95
         ],
         status: "up"
       },
       {
-        id: "64",
+        id: 64,
         name: "Widget Showbox",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           4,
           5,
@@ -1351,9 +1411,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "65",
+        id: 65,
         name: "Widget Stratos booking engine",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           0,
           7
@@ -1361,57 +1421,57 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "66",
+        id: 66,
         name: "Widget WebCheckin",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           96
         ],
         status: "up"
       },
       {
-        id: "67",
+        id: 67,
         name: "Component Traveler selector",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           84
         ],
         status: "up"
       },
       {
-        id: "68",
+        id: 68,
         name: "Component Media zone",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "69",
+        id: 69,
         name: "Widget Newsletter",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           99
         ],
         status: "up"
       },
       {
-        id: "70",
+        id: 70,
         name: "Widget External Newsletter",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "71",
+        id: 71,
         name: "Widget External Edoc",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "72",
+        id: 72,
         name: "Widget External Stratos booking engine for Canoe",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           0,
           2,
@@ -1420,9 +1480,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "73",
+        id: 73,
         name: "Widget External Stratos booking engine for TDP",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           0,
           2,
@@ -1431,9 +1491,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "74",
+        id: 74,
         name: "Widget External Stratos booking engine for Destination",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           2,
           7
@@ -1441,9 +1501,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "93",
+        id: 93,
         name: "Widget External Stratos booking engine for TO Portal",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           2,
           7
@@ -1451,86 +1511,86 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "75",
+        id: 75,
         name: "Mobile App destination timeline feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "76",
+        id: 76,
         name: "Mobile App hotel timeline feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "77",
+        id: 77,
         name: "Mobile App destinations menu feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "78",
+        id: 78,
         name: "Mobile App page contact us feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "79",
+        id: 79,
         name: "Mobile App airport list feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "80",
+        id: 80,
         name: "TO Portal extraction feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "81",
+        id: 81,
         name: "TO Portal flight engine feeds",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "82",
+        id: 82,
         name: "TDP dynamic contents",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "83",
+        id: 83,
         name: "SV dynamic contents",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "84",
+        id: 84,
         name: "Flight search feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "85",
+        id: 85,
         name: "Alerts feed",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "86",
+        id: 86,
         name: "Site externe Canoe",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           72,
           90
@@ -1538,9 +1598,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "87",
+        id: 87,
         name: "Site externe Marlin travel",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           90,
           70
@@ -1548,34 +1608,34 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "88",
+        id: 88,
         name: "Site externe Kayak",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           84
         ],
         status: "up"
       },
       {
-        id: "89",
+        id: 89,
         name: "Site externe Cartrawler",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           90
         ],
         status: "up"
       },
       {
-        id: "90",
+        id: 90,
         name: "Header/Footer dynamic contents",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "91",
+        id: 91,
         name: "Mobile App",
-        sensorIds: null,
+        sensorsIds: [],
         dependencies: [
           75,
           76,
@@ -1586,9 +1646,9 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "92",
+        id: 92,
         name: "TO Portal",
-        sensorIds: [ ],
+        sensorsIds: [ ],
         dependencies: [
           80,
           81,
@@ -1598,44 +1658,44 @@ const fetchData = {
         status: "up"
       },
       {
-        id: "95",
+        id: 95,
         name: "BE Secure Flight service",
-        sensorIds: [ ],
+        sensorsIds: [ ],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "96",
+        id: 96,
         name: "BE WebCheckin service",
-        sensorIds: [ ],
+        sensorsIds: [ ],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "97",
+        id: 97,
         name: "BE Group quote service",
-        sensorIds: [ ],
+        sensorsIds: [ ],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "98",
+        id: 98,
         name: "BE Kids Club service",
-        sensorIds: [ ],
+        sensorsIds: [ ],
         dependencies: [ ],
         status: "up"
       },
       {
-        id: "99",
+        id: 99,
         name: "BE Adobe campaign service",
-        sensorIds: [ ],
+        sensorsIds: [ ],
         dependencies: [ ],
         status: "up"
       }
     ],
     groups: [
       {
-        groupId: "1",
+        id: 1,
         name: "TS.WCM",
         componentIds: [ ],
         groupIds: [
@@ -1647,7 +1707,7 @@ const fetchData = {
         ]
       },
       {
-        groupId: "2",
+        id: 2,
         name: "TS.API",
         componentIds: [ ],
         groupIds: [
@@ -1656,7 +1716,7 @@ const fetchData = {
         ]
       },
       {
-        groupId: "3",
+        id: 3,
         name: "Datalex",
         componentIds: [
           21,
@@ -1665,7 +1725,7 @@ const fetchData = {
         groupIds: [ ]
       },
       {
-        groupId: "4",
+        id: 4,
         name: "Soft Voyage",
         componentIds: [
           24,
@@ -1674,7 +1734,7 @@ const fetchData = {
         groupIds: [ ]
       },
       {
-        groupId: "6",
+        id: 6,
         name: "Backend",
         componentIds: [
           16,
@@ -1688,7 +1748,7 @@ const fetchData = {
         groupIds: [ ]
       },
       {
-        groupId: "7",
+        id: 7,
         name: "Radixx DB",
         componentIds: [
           17,
@@ -1699,7 +1759,7 @@ const fetchData = {
         groupIds: [ ]
       },
       {
-        groupId: "9",
+        id: 9,
         name: "External Web sites",
         componentIds: [
           86,
@@ -1710,7 +1770,7 @@ const fetchData = {
         groupIds: [ ]
       },
       {
-        groupId: "10",
+        id: 10,
         name: "TS API Flight",
         componentIds: [
           0,
@@ -1727,7 +1787,7 @@ const fetchData = {
         groupIds: [ ]
       },
       {
-        groupId: "11",
+        id: 11,
         name: "TS API TO",
         componentIds: [
           8,
@@ -1740,7 +1800,7 @@ const fetchData = {
         groupIds: [ ]
       },
       {
-        groupId: "12",
+        id: 12,
         name: "TS components",
         componentIds: [
           42,
@@ -1775,7 +1835,7 @@ const fetchData = {
         groupIds: [ ]
       },
       {
-        groupId: "13",
+        id: 13,
         name: "TS external widgets",
         componentIds: [
           70,
@@ -1787,7 +1847,7 @@ const fetchData = {
         groupIds: [ ]
       },
       {
-        groupId: "14",
+        id: 14,
         name: "TS services pages",
         componentIds: [
           30,
@@ -1800,7 +1860,7 @@ const fetchData = {
         groupIds: [ ]
       },
       {
-        groupId: "15",
+        id: 15,
         name: "TS sale pages",
         componentIds: [
           26,
@@ -1817,7 +1877,7 @@ const fetchData = {
         groupIds: [ ]
       },
       {
-        groupId: "17",
+        id: 17,
         name: "TS WCM feeds",
         componentIds: [
           75,
@@ -1838,13 +1898,13 @@ const fetchData = {
     ],
     sensors: [
       {
-        id: "4316",
+        id: 4316,
         name: "getAirports",
         sensorType: "1",
         statusMessage: "OK"
       },
       {
-        id: "4133",
+        id: 4133,
         name: "airTransat",
         sensorType: "httpWebFullPage",
         statusMessage: "OK"
@@ -1853,4 +1913,4 @@ const fetchData = {
   }
 }
 
-export { schema, fixtures, datas, fetchData };
+export { fixtures, schema, schemaFetchdata, fetchData };
