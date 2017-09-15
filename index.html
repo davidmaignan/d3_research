@@ -14,8 +14,6 @@
    <!-- Custom styles for this template -->
    <link href="./assets/css/styles.css" rel="stylesheet">
    <script src="https://unpkg.com/lodash@4.16.6"></script>
-
-
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -44,11 +42,22 @@
        </div>
      </div>
       <div class="row diagram-container" id="edgediagram-container">
-        <div class="col-lg-7">
+        <div class="col-sm-12">
           <svg></svg>
         </div>
-        <div class="col-lg-5 col-md-12">
-          <h1>Node title</h1>
+      </div>
+      <div class="row">
+        <form class="col-sm-12 alert my-alert">
+          <div class="form-group row">
+            <label for="edgeSearchInput" class="col-sm-2 col-form-label">Recherche</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="edgeSearchInput" id="edgeSearchInput">
+            </div>
+          </div>
+        </form>
+        <div class="row">
+        <div class="col-sm-12 alert my-alert">
+          <h3>Node title</h3>
           <div class="alert alert-success" role="alert">
             <strong>Status</strong> OK
           </div>
@@ -66,8 +75,10 @@
             <dd class="col-sm-9">Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</dd>
           </dl>
         </div>
-    </div>
-    </div>
+      </div>
+      </div>
+  </div>
+</div>
     <!-- Modal -->
     <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
       <div class="modal-dialog" role="document">

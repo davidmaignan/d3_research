@@ -7,7 +7,7 @@ import selection_attrs from "./node_modules/d3-selection-multi/src/selection/att
 import selection_styles from "./node_modules/d3-selection-multi/src/selection/styles";
 import { ModelService } from './assets/services/ModelService.js'
 import { initArc, updateArc } from './assets/vue/ArcDiagonal.js'
-import { initEdge, updateEdge, resetEdge } from './assets/vue/EdgeBundling.js'
+import { initEdge, updateEdge, resetEdge, searchEdgeNode } from './assets/vue/EdgeBundling.js'
 import { fixtures, schema, schemaFetchdata, fetchData } from './assets/fixtures.js'
 import { initMenu } from './assets/vue/menu.js'
 
@@ -78,8 +78,6 @@ if(modeleService.isValid() === true){
 //   })
 // }
 
-// console.log(modele.getLinks().map(l => {return l.source.id + ": " + l.target.id}))
-
 initArc(modele)
 initEdge(modele)
 initMenu()
@@ -87,29 +85,19 @@ initMenu()
 let fetchDataService = new ModelService(fetchData, schemaFetchdata)
 
 if(fetchDataService.isValid() === true) {
-
-  fetchData.content.components.forEach(t => {
-    let cmp = modele.components.get(t.id)
-    if (cmp !== undefined){
-      // console.log(cmp.id, cmp.name, t.id, t.name)
-    } else {
-      // console.log(cmp, t.id, t.name)
-    }
-  })
-
   modele.update(fetchData)
 
-  console.log(modele.hasNewNode)
-
   if(modele.hasNewNode === true){
+    console.log("You must reload the page to see the changes")
     //reloader la page
     // windowService.reload()
+  } else {
+    // updateArc(modele)
+    // updateEdge(modele)
   }
-
-  updateArc(modele)
-  updateEdge(modele)
-
-  // initEdge(modele)
-  // updateArc(modele)
-  // console.log(links.map(l => l.source.name + ":" + l.target.name), links2.map(l => l.source.name + ":" + l.target.name))
 }
+
+document.querySelector("#edgeSearchInput").addEventListener('input', function(evt) {
+  let text = document.querySelector("#edgeSearchInput").value
+  searchEdgeNode(text)
+})

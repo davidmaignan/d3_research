@@ -77,8 +77,10 @@ const popInfo = (d) => {
 }
 
 let initArc = (modele) => {
+  let components = modele.getComponentsAndLinks()
+
   let node = nodeContainer.selectAll("circle")
-    .data(modele.getNodes());
+    .data(components.nodes);
 
   node.enter()
      .append("circle")
@@ -95,7 +97,7 @@ let initArc = (modele) => {
 
    node.exit().remove();
 
-  let text = textContainer.selectAll("text").data(modele.getNodes())
+  let text = textContainer.selectAll("text").data(components.nodes)
   text.enter()
    .append("text")
    .attrs({
@@ -116,11 +118,10 @@ let initArc = (modele) => {
 
    text.exit().remove();
 
-  let link = linkContainer.selectAll("path").data(modele.getLinks())
+  let link = linkContainer.selectAll("path").data(components.links)
   link.enter()
    .append("path")
    .attr("class", (link) => {
-     console.log(link)
      return `link ${link.source.getClassName()}-source ${link.target.getClassName()}-target`
     })
    .attr("transform", function(d, i) {
@@ -146,8 +147,10 @@ let initArc = (modele) => {
 }
 
 let updateArc = (modele) => {
+  let components = modele.getComponentsAndLinks()
+
   let node = nodeContainer.selectAll("circle")
-    .data(modele.getNodes());
+    .data(components.nodes);
 
   node.enter()
      .append("circle")
@@ -164,7 +167,7 @@ let updateArc = (modele) => {
 
    node.exit().remove();
 
-   let text = textContainer.selectAll("text").data(modele.getNodes())
+   let text = textContainer.selectAll("text").data(components.nodes)
    text.enter()
     .append("text")
     .attrs({
@@ -187,8 +190,6 @@ let updateArc = (modele) => {
 
     let link = linkContainer.selectAll("path").data(modele.getLinks())
     link.enter()
-
-
 }
 
 export { initArc, updateArc }

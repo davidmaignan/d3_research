@@ -25,8 +25,8 @@ describe("Model: getNodes, getLinks, getEdgeData, update", function() {
       groupMap.set(groupC.id, groupC)
       groupMap.set(groupD.id, groupD)
 
-      componentMap.set(component1.id, component1)
       componentMap.set(component2.id, component2)
+      componentMap.set(component1.id, component1)
       componentMap.set(component3.id, component3)
 
       groupA.addGroup(groupB)
@@ -67,7 +67,7 @@ describe("Model: getNodes, getLinks, getEdgeData, update", function() {
     })
     describe("Model:getEdgeData, getNodes, update", function() {
       it("Model:getEdgeData: retourne un tableau de lien", function() {
-        expect(modele.getEdgeData()).to.have.keys('name', 'children');
+        expect(modele.getEdgeData()).to.have.keys('name', 'children', "links");
         expect(modele.getEdgeData().name).to.be.a('string')
         expect(modele.getEdgeData().children).to.be.an('array')
       });
@@ -149,7 +149,6 @@ describe("Model: getNodes, getLinks, getEdgeData, update", function() {
             expect(modele.getNodes().length).to.be.equal(8)
             let expectedIds = [3,4]
             let depIds = modele.components.get(1).dependenciesMap.map(d => d.id)
-            console.log(modele.components.get(4))
             expect(depIds).to.be.eql(expectedIds)
         })
         it("update a group (name, componentIds, groupIds)." +
@@ -183,6 +182,27 @@ describe("Model: getNodes, getLinks, getEdgeData, update", function() {
             expect(modele.groups.get(1).groupIds).to.be.eql([11,12,13,14,15])
             expect(modele.groups.get(1).componentIds).to.be.eql([1,5])
             expect(modele.groups.get(1).componentMap.map(g => g.id)).is.eql([1,5])
+        })
+      })
+      describe("Model:getNodesGrouped, getSortedAlphabetically", function () {
+        it("returned the components sorted by groups", function() {
+          let result = modele.getNodesGrouped()
+          result = result.reduce((r, a) => {
+            r[a[0]] = a[1].map(e => e.id)
+            return r
+          }, [])
+          let expected = [[3], [1], undefined, undefined, [2]]
+          expect(result).to.be.eql(expected)
+        })
+
+        it("return an array sorted", function(){
+          let result = modele.getSortedAlphabetically(
+            [component3, component1, component2, new Component(0, "cmp 0", [])]
+          )
+          for(let i = 0; i < 3; i++){
+            //Note: cmp 0 at index 0, cmp 1 at index 1 ...
+            expect(result[i].id).to.be.equal(i)
+          }
         })
       })
   })

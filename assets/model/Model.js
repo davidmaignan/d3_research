@@ -30,6 +30,7 @@ class Group {
   }
   addComponent(component){
     this.componentMap.set(component.name, component)
+    component.groupId = this.id
   }
   addGroups(groupList){
     groupList.forEach((g) =>{
@@ -66,6 +67,7 @@ class Component {
     this.name = name
     this.dependenciesIds = dependenciesIds
     this.dependenciesMap = new Map()
+    this.groupId = 0
   }
   getId(){
     return this.id
@@ -117,10 +119,24 @@ class Model {
 
     return this.components.reduce((result, c) => {return result.concat(c.getLinks())}, links)
   }
+  getComponentsAndLinks(){
+    return {
+      "nodes": this.components.toArray(),
+      "links": this.components.reduce((result, c) => {return result.concat(c.getLinks())}, [])
+    }
+  }
   getEdgeData(){
+
+    let children = this.getNodesGrouped().reduce((r, e) => {
+      return r.concat(this.getSortedAlphabetically(e[1]))
+    },[])
+
+    this.getNodesGrouped()
+
     return {
       "name": "root",
-      "children": this.getNodes()
+      "children": children,
+      "links": this.components.reduce((result, c) => {return result.concat(c.getLinks())}, [])
     }
   }
   update(updatedData){
@@ -179,6 +195,16 @@ class Model {
     let newComponent = new Component(d.id, d.name, d.dependencies)
     this.components.set(d.id, newComponent)
     return newComponent
+  }
+  getNodesGrouped(){
+    return this.components.group(function(a, b){
+      return a.groupId || 0
+    })
+  }
+  getSortedAlphabetically(ar){
+    return ar.sort((a, b) => {
+      return a.name.localeCompare(b.name)
+    })
   }
 }
 

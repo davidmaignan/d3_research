@@ -14,10 +14,10 @@ circle {
 }
 
 text{
-  fill: #aaa
+  fill: #777
 }
 
-.node{
+.node, .text-edge{
   fill: #1f77b4
 }
 
@@ -33,22 +33,22 @@ text{
   fill: #F39C12;
 }
 
-.update {
-  fill: green;
+.text-edge.selected {
+  fill: red;
 }
 
 .link {
   fill: none;
-  stroke: #666;
-  stroke-opacity: .3;
+  stroke: #aeaeae;
+  stroke-opacity: 1;
   stroke-width: 1;
 }
 
-.dimmed{
+.dimmed {
   stroke-opacity: .3
 }
 
-.link.hover{
+.link.hover {
   stroke: red;
 }
 
@@ -67,18 +67,18 @@ text{
 .text{
   "font-family": "arial";
   "font-size": "12px";
-  "fill": "#ddd";
+  "fill": "#666";
 }
 
 .text.hover, .node.hover{
   fill: red
 }
 
-.text.hover-parent, .node.hover-parent{
+.text-edge.hover-parent, .node.hover-parent{
   fill: #4FB8C2
 }
 
-.text.hover-child, .node.hover-child{
+.text-edge.hover-child, .node.hover-child{
   fill: #F39C12
 }
 
@@ -117,4 +117,8 @@ ul{
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+.my-alert{
+  border: 1px solid #ddd
 }
