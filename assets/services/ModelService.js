@@ -54,13 +54,14 @@ class ModelService {
       for (let i in this.json.groups) {
         let g = this.json.groups[i]
 
-        groupMap.set(g.id, new Group(g.groupId, g.name, g.componentIds, g.groupIds))
+        groupMap.set(g.id, new Group(g.id, g.name, g.componentIds, g.groupIds))
       }
 
       groupMap.forEach((g) => {
         let componentIds = g.getComponentIds()
         let components = componentMap.filter(cmp => componentIds.includes(cmp.getId()))
         g.addComponents(components)
+
 
         let groupIds = g.getGroupIds()
         let groupList = groupMap.filter(g => groupIds.includes(g.getId()))

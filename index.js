@@ -11,6 +11,7 @@ import { initEdge, updateEdge, resetEdge, searchEdgeNode } from './assets/vue/Ed
 import { fixtures, schema, schemaFetchdata, fetchData } from './assets/fixtures.js'
 import { initMenu } from './assets/vue/menu.js'
 
+
 d3.selection.prototype.attrs = selection_attrs
 d3.selection.prototype.styles = selection_styles
 

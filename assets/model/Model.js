@@ -29,8 +29,8 @@ class Group {
     })
   }
   addComponent(component){
-    this.componentMap.set(component.name, component)
     component.groupId = this.id
+    this.componentMap.set(component.name, component)
   }
   addGroups(groupList){
     groupList.forEach((g) =>{
@@ -127,17 +127,24 @@ class Model {
   }
   getEdgeData(){
 
+    this.getNodesGrouped().forEach(d => {
+      // console.log(d[0], d[1].length)
+    })
+
     let children = this.getNodesGrouped().reduce((r, e) => {
+      e[1].forEach(c => c.groupId = e[0])
+
       return r.concat(this.getSortedAlphabetically(e[1]))
     },[])
-
-    this.getNodesGrouped()
 
     return {
       "name": "root",
       "children": children,
       "links": this.components.reduce((result, c) => {return result.concat(c.getLinks())}, [])
     }
+  }
+  getPieChartData(){
+    return []
   }
   update(updatedData){
     this.hasNewNode = false

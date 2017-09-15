@@ -205,5 +205,11 @@ describe("Model: getNodes, getLinks, getEdgeData, update", function() {
           }
         })
       })
+
+      it("return the sizing (%) of each group", function(){
+        modele.
+      })
+
+
   })
 })

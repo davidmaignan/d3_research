@@ -10,11 +10,15 @@ svg {
 }
 
 circle {
-  fill: #efefef;
+  fill: #ddd;
 }
 
 text{
   fill: #777
+}
+
+.arc {
+    fill: #efefef;
 }
 
 .node, .text-edge{
@@ -40,7 +44,7 @@ text{
 .link {
   fill: none;
   stroke: #aeaeae;
-  stroke-opacity: 1;
+  stroke-opacity: .5;
   stroke-width: 1;
 }
 
