@@ -126,32 +126,57 @@ class Model {
     }
   }
 
-  getComponentForAGroup(g, result){
-    result["nodes"].concat(g.componentMap.toArray())
+  flattenGroupComponent(result, group){
+    let startIndex = result["children"].length -1 || 0
 
-    g.groupMap.forEach(e => {
-      result['nodes'].concat(this.getComponentForAGroup(e))
+
+    let groupInfo = {
+      "group": group,
+      "indices": [startIndex, null]
+    }
+
+    group.groupMap.forEach((grp) => {
+      this.flattenGroupComponent(result, grp)
+    })
+
+    this.flattenGroupComponentList(result, group)
+
+    groupInfo["indices"][1] = result["children"].length -1
+
+    result["groups"].set(group.id, groupInfo)
+  }
+
+  flattenGroupComponentList(result, g){
+    g.componentMap.forEach((cmp) => {
+      result["children"].push(cmp)
     })
   }
 
-  getEdgeData(){
 
-    var result = {
-      "nodes": []
+  getEdgeData(){
+    let groupTopLevel = this.groups.filter(g => g.isTopLevel())
+
+    let result = {
+      "name": "root",
+      "children": [],
+      "groups": new Map(),
+      "links": []
     }
 
-    this.groups.filter(g => g.isTopLevel()).forEach(h => {
-      this.getComponentForAGroup(h, result)
+    this.groups.filter(g => g.isTopLevel()).forEach(g => {
+      this.flattenGroupComponent(result, g)
     })
 
-    console.log(result)
-
+    result["children"] = result["children"].concat(this.components.filter(c => c.groupId === 0).toArray())
+    result["links"] = this.components.reduce((result, c) => {return result.concat(c.getLinks())}, [])
 
     let children = this.getNodesGrouped().reduce((r, e) => {
       e[1].forEach(c => c.groupId = e[0])
 
       return r.concat(this.getSortedAlphabetically(e[1]))
     },[])
+
+    return result
 
     return {
       "name": "root",
