@@ -89,15 +89,15 @@ let initEdge = (modele) => {
   root.descendants().forEach(function(n){
     mapLinks[n.data.name] = n
   })
-  modele.getEdgeData().links.forEach(function(l){
-    linkEdge.push(mapLinks[l.source.name].path(mapLinks[l.target.name]))
-  })
-  link = link.data(linkEdge)
-      .enter().append("path")
-        .each(function(d) {
-           d.source = d[0], d.target = d[d.length - 1]; })
-        .attr("class", "link")
-        .attr("d", line);
+  // modele.getEdgeData().links.forEach(function(l){
+  //   linkEdge.push(mapLinks[l.source.name].path(mapLinks[l.target.name]))
+  // })
+  // link = link.data(linkEdge)
+  //     .enter().append("path")
+  //       .each(function(d) {
+  //          d.source = d[0], d.target = d[d.length - 1]; })
+  //       .attr("class", "link")
+  //       .attr("d", line);
 
   circle = circle.data(root.descendants())
     .enter()

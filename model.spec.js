@@ -30,12 +30,10 @@ describe("Model: getNodes, getLinks, getEdgeData, update", function() {
       componentMap.set(component3.id, component3)
 
       groupA.addGroup(groupB)
-      groupA.addGroup(groupB) //check for duplicates
       groupA.addGroup(groupC)
       groupA.addComponent(component1)
       groupD.addGroup(groupA)
       groupD.addComponent(component2)
-      groupD.addComponent(component2) //check for duplicates
       component1.addDependency(component2)
       component1.addDependency(component3)
       component2.addDependency(component3)
@@ -207,7 +205,7 @@ describe("Model: getNodes, getLinks, getEdgeData, update", function() {
       })
 
       it("return the sizing (%) of each group", function(){
-        modele.
+        // modele.
       })
 
 

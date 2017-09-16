@@ -79,14 +79,14 @@ if(modeleService.isValid() === true){
 //   })
 // }
 
-initArc(modele)
+// initArc(modele)
 initEdge(modele)
 initMenu()
 
 let fetchDataService = new ModelService(fetchData, schemaFetchdata)
 
 if(fetchDataService.isValid() === true) {
-  modele.update(fetchData)
+  // modele.update(fetchData)
 
   if(modele.hasNewNode === true){
     console.log("You must reload the page to see the changes")

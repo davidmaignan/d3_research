@@ -125,11 +125,27 @@ class Model {
       "links": this.components.reduce((result, c) => {return result.concat(c.getLinks())}, [])
     }
   }
+
+  getComponentForAGroup(g, result){
+    result["nodes"].concat(g.componentMap.toArray())
+
+    g.groupMap.forEach(e => {
+      result['nodes'].concat(this.getComponentForAGroup(e))
+    })
+  }
+
   getEdgeData(){
 
-    this.getNodesGrouped().forEach(d => {
-      // console.log(d[0], d[1].length)
+    var result = {
+      "nodes": []
+    }
+
+    this.groups.filter(g => g.isTopLevel()).forEach(h => {
+      this.getComponentForAGroup(h, result)
     })
+
+    console.log(result)
+
 
     let children = this.getNodesGrouped().reduce((r, e) => {
       e[1].forEach(c => c.groupId = e[0])
