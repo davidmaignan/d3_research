@@ -157,7 +157,6 @@ let initEdge = (modele) => {
         .attr("d", line);
 
 
-
   circle = circle.data(root.descendants())
     .enter()
     .append("circle")

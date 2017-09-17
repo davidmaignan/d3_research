@@ -129,7 +129,6 @@ class Model {
   flattenGroupComponent(result, group){
     let startIndex = result["children"].length - 1 || 0
 
-
     let groupInfo = {
       "group": group,
       "indices": [startIndex, null]
