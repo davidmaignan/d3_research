@@ -8,7 +8,7 @@ d3.selection.prototype.styles = selection_styles
 const diameter = 1300,
     radius = diameter / 2,
     radiusX = radius + 100,
-    innerRadius = radius - 350;
+    innerRadius = radius - 400;
 const cluster = d3.cluster()
     .size([360, innerRadius]);
 const line = d3.radialLine()
@@ -18,9 +18,9 @@ const line = d3.radialLine()
 
 let svg = d3.select("#edgediagram-container").select("svg")
     .attr("width", 1700)
-    .attr("height", diameter)
+    .attr("height", 1700)
     .append("g")
-    .attr("transform", "translate(" + radiusX + "," + radius + ")");
+    .attr("transform", "translate(" + 1700 / 2 + "," + 1700 / 2 + ")");
 let link, text, node, circle, mapLinks, linkEdge, arc
 
 let mouseover = (d) => {
@@ -32,6 +32,79 @@ let mouseover = (d) => {
   text.classed("hover-child", function(n) { return n.target; })
       .classed("hover-parent", function(n) { return n.source; });
 }
+
+let arcGenerator = (g, total, className) => {
+  let ratio = Math.PI * 2 / total
+  let startAngle = ratio * (g.indices[0] + 1)
+  let endAngle = ratio * (g.indices[1] + 1)
+
+  let arc =  d3.arc()
+      .innerRadius(radius - 10)
+      .outerRadius(radius + 30)
+      .startAngle(startAngle)
+      .endAngle(endAngle);
+
+  svg.append("path")
+      .attr("class", className)
+      .attr("d", arc)
+      .attr("id", "arc-subgroup"+ g.group.id)
+
+  let angle = ((startAngle + endAngle) / 2)
+  let textCX = Math.sin(angle) * radius
+  let textCY = Math.cos(angle) * radius
+
+  console.log(g.group.id, g.group.name, angle, textCX, textCY)
+
+  // svg.append("text")
+  //     .attr("class", "arc-text")
+  //     .text(g.group.name)
+  //     .attr("transform", `translate(${textCX}, ${-textCY})`)
+
+  svg.append("text")
+	 .attr("class", "arc-text")
+   .attr("x", 5)
+   .attr("dy", 18)
+   .append("textPath")
+	 .attr("xlink:href", "#arc-subgroup" + g.group.id)
+	 .text(g.group.name);
+
+}
+
+let arcGenerator2 = (g, total, className) => {
+  let ratio = Math.PI * 2 / total
+  let startAngle = ratio * (g.indices[0] + 1)
+  let endAngle = ratio * (g.indices[1] + 1)
+
+  let arc =  d3.arc()
+      .innerRadius(radius + 40)
+      .outerRadius(radius + 65)
+      .startAngle(startAngle)
+      .endAngle(endAngle);
+
+  svg.append("path")
+      .attr("class", className)
+      .attr("d", arc)
+      .attr("id", "arc-metagroup"+ g.group.id)
+
+  let angle = ((startAngle + endAngle) / 2)
+  let textCX = Math.sin(angle) * (radius + 10)
+  let textCY = Math.cos(angle) * (radius + 10)
+
+  svg.append("text")
+	 .attr("class", "arc-metagroup-text")
+   .attr("x", 5)
+	 .attr("dy", 18)
+   .append("textPath")
+	 .attr("xlink:href", "#arc-metagroup" + g.group.id)
+	 .text(g.group.name);
+
+  // svg.append("text")
+  //     .attr("class", "arc-text")
+  //     .text(g.group.name)
+  //     .attr("transform", `translate(${textCX}, ${-textCY})`)
+}
+
+// Methods
 let initEdge = (modele) => {
   link = svg.selectAll(".link"),
       text = svg.selectAll(".text-edge"),
@@ -39,41 +112,26 @@ let initEdge = (modele) => {
       mapLinks = {},
       linkEdge = []
 
-  let root = d3.hierarchy(modele.getEdgeData()).sum(function(d) { return d.size; });
+  let data = modele.getEdgeData()
+
+  let root = d3.hierarchy(data).sum(function(d) { return d.size; });
   cluster(root)
 
-  arc = []
-
-  root.descendants().map((a, b) => {
-    if(a.data.name !== "root"){
-      arc[a.data.groupId] = []
-    }
-  })
-  root.descendants().map((a, b) => {
-    if(a.data.name !== "root"){
-      let dt = {'x': a.x, 'y': a.y}
-      arc[a.data.groupId].push({'x': a.x, 'y': a.y})
-    }
+  let index = 0
+  data.groups.filter(g => g.group.isTopLevel() === true).forEach((g, index) => {
+    let className = "arc-metagroup-" + (index % 2)
+    index++
+    arcGenerator2(g, data.children.length, className)
   })
 
-  // console.log(root.descendants().length)
-
-  let arcGenerator = (percent) => {
-    // let startAngle = Math.asin((750 - radiusX) / radius)
-    // let endAngle = Math.asin((1200 - radiusX) / radius)
-
-    let arc =  d3.arc()
-        .innerRadius(innerRadius + 10)
-        .outerRadius(radius)
-        .startAngle(0)
-        .endAngle( percent * 2 * Math.PI / 100 + 0.025);
-
-    svg.append("path")
-        .attr("class", "arc")
-        .attr("d", arc);
-  }
-  //
-  arcGenerator(10)
+  index = 0
+  data.groups.forEach(g => {
+    if(g.group.isTopLevel() === false){
+      let className = "arc-" + (index % 2)
+      index++
+      arcGenerator(g, data.children.length, className)
+    }
+  })
 
   text = text.data(root.descendants())
     .enter()
@@ -84,7 +142,6 @@ let initEdge = (modele) => {
     .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
     .text(function(d) { return d.data.name + "(" + d.data.groupId + ")"; })
     .on("mouseover", mouseover)
-
 
   root.descendants().forEach(function(n){
     mapLinks[n.data.name] = n
@@ -98,6 +155,8 @@ let initEdge = (modele) => {
            d.source = d[0], d.target = d[d.length - 1]; })
         .attr("class", "link")
         .attr("d", line);
+
+
 
   circle = circle.data(root.descendants())
     .enter()

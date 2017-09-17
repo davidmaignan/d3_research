@@ -1,4 +1,5 @@
-/* Show it is fixed to the top */
+/*https://coolors.co/19647e-51a1a2-2a9d8f-dec056-ee964b*/
+
 body {
   min-height: 75rem;
   padding-top: 4.5rem;
@@ -10,7 +11,7 @@ svg {
 }
 
 circle {
-  fill: #ddd;
+  fill: #797979;
 }
 
 text{
@@ -29,13 +30,9 @@ text{
   fill: red
 }
 
-.node.hover-parent{
-  fill: #4FB8C2
-}
 
-.node.hover-child{
-  fill: #F39C12;
-}
+
+
 
 .text-edge.selected {
   fill: red;
@@ -56,8 +53,15 @@ text{
   stroke: red;
 }
 
+.text-edge.hover-parent, .node.hover-parent{
+  fill: #19647E;
+  font-weight: bold;
+}
+.node.hover-parent{
+  fill: #19647E;
+}
 .link.hover-parent{
-  stroke: #4FB8C2;
+  stroke: #19647E;
   stroke-opacity: 1;
   stroke-width: 3;
 }
@@ -66,6 +70,15 @@ text{
   stroke: #F39C12;
   stroke-opacity: 1;
   stroke-width: 3;
+}
+
+.node.hover-child{
+  fill: #F39C12;
+}
+
+.text-edge.hover-child, .node.hover-child{
+  fill: #F39C12;
+  font-weight: bold;
 }
 
 .text{
@@ -78,13 +91,6 @@ text{
   fill: red
 }
 
-.text-edge.hover-parent, .node.hover-parent{
-  fill: #4FB8C2
-}
-
-.text-edge.hover-child, .node.hover-child{
-  fill: #F39C12
-}
 
 .popover{
   position: absolute;
@@ -125,4 +131,29 @@ ul{
 
 .my-alert{
   border: 1px solid #ddd
+}
+
+.arc:nth-child(odd) {
+    fill: #deeedd
+}
+
+.arc:nth-child(even) {
+    background: #eeddee;
+}
+
+/* groups arcs*/
+.arc-0{
+  fill: #C4E3FB;
+}
+.arc-1{
+  fill: #E8E8E8;
+}
+.arc-metagroup-0{
+  fill: #305165;
+}
+.arc-metagroup-1{
+  fill: #C54D4D;
+}
+.arc-metagroup-text{
+  fill: white;
 }

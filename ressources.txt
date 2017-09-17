@@ -1,23 +1,22 @@
 https://medium.com/ninjaconcept/interactive-dynamic-force-directed-graphs-with-d3-da720c6d7811
 
-
 //simulation
 https://bl.ocks.org/mbostock/1095795
 
-//arc
+//arc diagram
 https://gist.github.com/enjoylife/4e435d329c2c743da33e
 http://bl.ocks.org/goodmami/fd03b250588e1e1143bd
 http://elijahmeeks.com/#essays
 
 //cluster
 https://bl.ocks.org/ericsoco/4e1b7b628771ae77753842e6dabfcef3
-
 https://www.sarasoueidan.com/blog/svg-transformations/
 
 //Hierarchical Edge Bundling
 https://bl.ocks.org/mbostock/7607999
 
-
+//Arcs + text
+https://www.visualcinnamon.com/2015/09/placing-text-on-arcs.html
 
 //Testing
 https://cafedev.org/article/2016/12/testing-with-wepack-2-inject-loader-karma-mocha-chai-and-sinon/
